@@ -1,0 +1,27 @@
+---
+layout: post
+title:  "Using A Proxy In Mac OS X With SSH"
+date:   2009-01-02 19:25:00
+categories: 
+description: This little tutorial will show you how to use a proxy server on Mac OS X with only SSH installed on your proxy server.  This involves getting Firefox to use the SOCKS server and Cocoa applications. 
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<ul><li>First off, you'll need to have a server available to use as your Socks Proxy.&#160; If you have Mac OS X at home, you can just enable remote login, or if you use Ubuntu, just do "apt-get install openssh-server" in the command line.</li><li>Once done, you'll want to install <a class="external-link" href="http://projects.tynsoe.org/en/stm/">SSH Tunnel Manager</a> on Mac OS X.&#160; You can download it <a class="external-link" href="http://www.macupdate.com/info.php/id/10128">here</a>.</li><li>Open up SSH Tunnel Manager and click on the configuration button so you can manage your connections.</li>
+<ul><li>Enter in all the required fields for SSH authentication and click on the "Options.." button.</li><li>Check the "Enable SOCKS4 proxy"</li><li>Here is an example<br></li><li><img class="image-inline image-inline" src="../assets/img/copy2_of_copy_of_Picture6.png/image_preview" alt="SSH Tunnel Manager Example"></li><li>Once all that is done, get out of the configuration window and click the play button on the connection you just made</li><li>The hardest part is done now.&#160; You just need to tell Mac OS X to use it.</li></ul>
+<li>Setting up Firefox to use your Socks Proxy</li>
+<ul><li>Type "Command + ," get into the Firefox preferences</li><li>Click the Advanced button</li><li>Then select the "Network" tab</li><li>Select the "Manual proxy configuration:" radio button</li><li>In the "SOCKS Host:" section enter "localhost" and enter the port number you entered in the configuration.&#160; Here we enter "9999" for the port number.</li><li>Example screenshot</li><li><img class="image-inline image-inline" src="../assets/img/Picture7.png/image_preview" alt="SOCKS Firefox Configuration"><br></li><li>Click okay and now everything in Firefox should be using the proxy server.&#160; A simple way to test that it is working correctly is if your server is in a different location than where you are located.&#160; Then you can find a website that uses geo positioning to find out where it thinks you are located.&#160; It should think you are browsing from where your proxy server is located.&#160; I just use <a class="external-link" href="http://www.speedtest.net/">speed test</a> since my server is far away from where I am located.</li></ul>
+<li>Set Mac OS X applications to use the SOCKS proxy</li>
+<ul><li>Go into the System Preferences</li><li>Click the "Network" button</li><li>Click the "Advanced" button</li><li>Click the "Proxies" tab</li><li>Check the "SOCKS Proxy" and set the proxy settings like before with Firefox</li><li>Example configuration</li><li><img class="image-inline image-inline" src="../assets/img/copy_of_Picture8.png/image_preview" alt="Mac OS X SOCKS Configuration"></li><li>Click "OK"</li><li>Click "Apply"</li><li>You're done</li><li><br></li></ul>
+</ul>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

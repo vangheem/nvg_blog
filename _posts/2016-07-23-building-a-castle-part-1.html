@@ -1,0 +1,82 @@
+---
+layout: post
+title:  "Building a Castle: Part 1, an Introduction"
+date:   2016-07-23 12:37:00
+categories: plone python
+description: Details on building the Castle CMS distribution of Plone at Wildcard.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <p>At Wildcard on and off over the past year we've been working on building a distribution of Plone.</p>
+<p>The main goal of this distribution is to implement features on Plone that we've wanted done over the years. These features are tight integrations and UI opinions that Wildcard has seen the need to implement for our customers to see our solution as competitive.</p>
+<p>We've named the Plone CMS distribution: <a href="https://castlecms.io/" data-linktype="external" data-urltype="/view" data-val="https://castlecms.io/">Castle CMS</a>.</p>
+<p>Since this is an introduction post, I'll list some of the features that we've implemented to give you an idea of where we went with it. In future posts, I'll go into some of the details.</p>
+<h2>Feature list overview:</h2>
+<ul>
+<li><strong>Everything is Mosiac</strong>: Use mosaic to write all your content.</li>
+<li><strong>Everything is a Tile</strong>: In going the Mosaic route, we went all in with tiles. No more viewlets, no more portlets.</li>
+<li><strong>Enhanced UI</strong>: New toolbar, new modals, better related items widget, better image widget with cropping.</li>
+<li><strong>Amazon S3 Integrations</strong>: Automatically move large files to S3 and support for archiving old content to S3.</li>
+<li><strong>Focal point</strong>: Focal point support gives designers the ability to provide many image sizes without expecting&#160;their content editors to crop the images to the various target sizes. Content managers just need to select the area on the uploaded image that should be the focal point and the image will be focused automatically to that and cropped around that point on various sizes.</li>
+<li><strong>Responsive images</strong>: Scale up images to the most appropriate image size depending on the screen size of the device viewing the image. In addition, loading the larger image is only done once the image is scrolled to.</li>
+<li><strong>Repositories</strong>: Instead of making users have to think about where they need to add images on their site, we've implemented file and image repositories.</li>
+<li><strong>ElasticSearch</strong>: ElasticSearch support OOTB. This provides powerful search opportunities and improved performance.</li>
+<li><strong>Search features</strong>: Castle implements search pinning and advanced scoring based off of popularity and social media impact.</li>
+<li><strong>Recycling Bin</strong>: Users feel more safe using a recycling bin and this prevents potential issues when trying to use ZODB transaction undo.</li>
+<li><strong>Asynchronous Actions</strong>: Some tasks should be done asynchronously. With Castle, we've moved many actions into asynchronous functions. This even includes cases where you're trying to copy or delete a large number of items.</li>
+<li><strong>Analytics</strong>: Google Analytics API integration to get quick info on the popularity of pages.</li>
+<li><strong>Previews</strong>:&#160;Modal to quickly inspect the page you're working on with various screen sizes.</li>
+<li><strong>View as</strong>: Ability to view the site as another user. This is an administrator feature to help in debugging sharing issues.</li>
+<li><strong>Document Viewer</strong>: Integration with collective.documentviewer for all uploaded files.</li>
+<li><strong>Tiles!</strong>: Support for many different tiles: Audio, Video, Calendar, Document Viewer, Facebook, Twitter, Pinterest, Gallery, Slider, Navigation, Query Listing, Sharing, Search, Maps and more.</li>
+<li><strong>jbot and fragments</strong>: Our themes have built-in support for jbot and fragments and it works TTW.</li>
+<li><strong>Audit Log</strong>: Get details on what each user on the site has done and be able to export reports on those actions.</li>
+<li><strong>Sessions</strong>: Active session management. Allows users to inspect what other active sessions they have and end other sessions. Allow managers to inspect what users are currently active on the site.</li>
+<li><strong>Quality check</strong>: Let users know if they forgot the summary text or are publishing content that is linked to provide images or content.</li>
+<li><strong>Redis Integration</strong>:&#160;Redis is used extensively for caching, session management and async.</li>
+<li><strong>Image de-duplication</strong>: Detect duplicate images.</li>
+<li><strong>Login/Lockout support</strong>: Track login attempts and lockout a user with too many failed attempts.</li>
+<li><strong>Cloudflare</strong>: We've gone all in with Cloudflare integration for our CDN.</li>
+<li><strong>HTML5 Video</strong>: Auto convert video to HTML5 compatible format.</li>
+<li><strong>Design Menu</strong>: Quickly select layout to use on a particular page or folder.</li>
+<li><strong>and much more</strong>: Castle is meant to be a complete solution. We provide replication RO/RW, CDN and various API integrations to give a complete software solution.</li>
+</ul>
+<h2>Controversial features/changes:&#160;</h2>
+<p>With Castle we also made some decisions that some may wonder about. I'll put them out in the open now and begin to explain the reasons for it.</p>
+<ul>
+<li><strong>No more default pages</strong>: This has always been very confusing for users and with Mosaic, there really is no reason to have it anymore. The one exception is the home page where it is still used. Otherwise, there is no UI to be able to manage default pages.</li>
+<li><strong>No more diazo</strong>: We still have the theme editor. However, with Mosaic site and content layouts, there really is no reason to have diazo anymore in our opinion and it just added a layer of complexity that was unnecessary.</li>
+</ul>
+<h2>Open Source:</h2>
+<p>Wildcard is committed to Plone and open source. We will be open sourcing all the Plone related components.</p>
+<p>We'd also like to see some of these features land in Plone core after they get community buy-in.</p>
+<h2>Screenshots:</h2>
+<p><strong>Image widget with focal point selector</strong>:</p>
+<p><img data-linktype="image" src="/assets/img/screen-shot-2016-07-23-at-1-21-28-pm.png" title="Image widget" class="image-inline" data-val="548ff6aed7874d768d44d807fa316543" data-scale="large" alt="Image widget"></p>
+<p><strong>New related items widget(notice how you can add content from the related items widget?)</strong>:</p>
+<p><img data-linktype="image" src="/assets/img/screen-shot-2016-07-23-at-1-23-36-pm.png" title="Related items widget" class="image-inline" data-val="23c83e97c8454faf979852f2ae70ee98" data-scale="large" alt="Related items widget"></p>
+<p><strong>Content browser(used in related items and other areas)</strong>:</p>
+<p><img data-linktype="image" src="/assets/img/screen-shot-2016-07-23-at-1-31-46-pm.png" title="Content browser" class="image-inline" data-val="a54bef2d6ff9440088a0bfad6c03fb17" data-scale="large" alt="Content browser"></p>
+<p><strong>New add content modal</strong>:</p>
+<p><img data-linktype="image" src="/assets/img/screen-shot-2016-07-23-at-1-25-27-pm.png" title="Add content modal" class="image-inline" data-val="bcf0ccb066e14789b9c2465c0f09f6c5" data-scale="large" alt="Add content modal"></p>
+<p><strong>New toolbar</strong>:</p>
+<p><img data-linktype="image" src="/assets/img/screen-shot-2016-07-23-at-1-26-24-pm.png" title="Toolbar" class="image-inline" data-val="01258ba188d84a3581fbbef6ae5abbcf" data-scale="large" alt="Toolbar"></p>
+<p><strong>Preview</strong>:</p>
+<p><img data-linktype="image" src="/assets/img/screen-shot-2016-07-23-at-1-28-18-pm.png" title="Castle CMS: preview" class="image-inline" data-val="67f543ab6ce240f3a0fa8fdb0a59c12b" data-scale="large" alt="Castle CMS: preview"></p>
+<p><strong>Design menu</strong>:</p>
+<p><img data-linktype="image" src="/assets/img/screen-shot-2016-07-23-at-1-29-51-pm.png" title="Design modal" class="image-inline" data-val="0d68a10922cf4de7b49f861570dd9c45" data-scale="large" alt="Design modal"></p>
+<p><strong>Workflow/quality check</strong>:</p>
+<p><img data-linktype="image" src="/assets/img/screen-shot-2016-07-23-at-1-34-21-pm.png" title="Workflow/quality check" class="image-inline" data-val="ee3f1812ae6e4fb8acb31e27c1fc81da" data-scale="large" alt="Workflow/quality check"></p>
+<h2>In the wild:</h2>
+<p>Wildcard just completed a major deployment of <a href="https://www.fbi.gov/" data-linktype="external" data-urltype="/view" data-val="https://www.fbi.gov/">FBI.gov</a>&#160;using <a href="https://castlecms.io/" data-linktype="external" data-urltype="/view" data-val="https://castlecms.io/">Castle CMS</a>.&#160;</p>
+<h2>What's next:</h2>
+<p>I'm planning to write blog posts describing various features of Castle CMS.</p>
+          </div>
+          </div>
+          </div>
+      </div>
+    </div>
+  

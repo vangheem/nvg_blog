@@ -1,0 +1,53 @@
+---
+layout: post
+title:  "Using Google to login to your Plone site with authomatic"
+date:   2017-02-21 22:22:00
+categories: castle plone python
+description: Tutorial on integratingthepas.plugins.authomatic addon into the Plone CMS
+---
+<div data-panel="content">
+  <div class="mosaic-grid-row">
+    <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost">
+      </div>
+  </div>
+  <div class="mosaic-grid-row">
+    <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost">
+      <div class="movable removable mosaic-tile mosaic-IDublinCore-description-tile">
+        <div class="mosaic-tile-content">
+          
+    <span id="form-widgets-IDublinCore-description" class="textarea-widget text-field">Tutorial on integratingthepas.plugins.authomatic addon into the Plone CMS</span>
+
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="mosaic-grid-row">
+    <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost">
+      <div class="movable removable mosaic-tile mosaic-IRichText-text-tile">
+        <div class="mosaic-tile-content">
+          <p>The great&#160;pas.plugins.authomatic addon developed by&#160;Jens Klein and Matthias Dollfuss makes it easy to integrate authentication with many different authentication providers. Take a look at&#160;http://peterhudec.com/authomatic/ for details. This blog post will go over what it takes to integrate with Google.</p>
+<h2>oauth config</h2>
+<p>First off, setup google credentials: <a href="https://console.developers.google.com/apis/credentials" data-linktype="external" data-urltype="/view" data-val="https://console.developers.google.com/apis/credentials">https://console.developers.google.com/apis/credentials</a></p>
+<ul>
+<li>create new -&gt; oauth client</li>
+<li>redirect url: http://localhost:8080/Plone/authomatic-handler/google or wherever you're hosting</li>
+<li>make sure to configure oauth consent screen as well</li>
+</ul>
+<p>We'll use client id/secret later for the authomatic addon configuration.</p>
+<p>Also,&#160;enable google+ api scope info(https://console.developers.google.com/apis/api/plus/overview?project=&lt;project-id&gt;)&#160;and click enable button at the top. This might take a couple minutes to propagate.</p>
+<h2><br>Plone&#160;install</h2>
+<p>First off, install the pas.plugins.authomatic addon in your buildout file.</p>
+<p>Then, in plone, install the PAS plugin in the "Add-ons" control panel.</p>
+<p>Finally, here is a sample configuration for google you can configure in the add-on configuration screen:</p>
+<pre>{"google": {<br> "id": 1,<br> "display": {<br> "title": "Google",<br> "cssclasses": {<br> "button": "plone-btn plone-btn-default",<br> "icon": "glypicon glyphicon-google"<br> },<br> "as_form": false<br> },<br> "propertymap": {<br> "email": "email",<br> "link": "home_page",<br> "location": "location",<br> "name": "fullname"<br> },<br> "class_": "authomatic.providers.oauth2.Google",<br> "consumer_key": "&lt;google client id&gt;",<br> "consumer_secret": "&lt;google client secret&gt;",<br> "scope": ["profile", "email"],<br> "user_authorization_params": {<br>  "hd": "wildcardcorp.com"<br> },<br> "access_headers": {<br>  "User-Agent": "Plone (pas.plugins.authomatic)"<br> }<br>}</pre>
+<p>The main part to pay attention to here and customize is:</p>
+<pre>"consumer_key": "&lt;google client id&gt;",<br>"consumer_secret": "&lt;google client secret&gt;",</pre>
+<p>Bonus, to restrict to particular domains:</p>
+<pre>"user_authorization_params": {<br>&#160;"hd": "wildcardcorp.com"<br> }</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

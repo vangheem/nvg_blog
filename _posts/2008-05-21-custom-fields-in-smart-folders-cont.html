@@ -1,0 +1,37 @@
+---
+layout: post
+title:  "Custom Fields in Smart Folders Cont."
+date:   2008-05-21 22:07:00
+categories: 
+description: This is an improved way of doing what we did in the previous post.  This is completely done through code on install.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<p>You can still specify index fields in content types if you like, but you do not have to.&#160; I'm just going to throw the code up.&#160; It should be easy enough to understand.&#160; Figuring out how to do it was the difficult part.&#160; This registers everything with your smart folders so you can grab these fields and sort on them.</p>
+<p>&#160;</p>
+<pre>def install_indexes(self):
+&#160;&#160;&#160; ct = getToolByName(self, 'portal_catalog')
+&#160;&#160;&#160; atct = getToolByName(self, 'portal_atct')
+
+&#160;&#160;&#160; for index in get_indexes():
+&#160;&#160;&#160;&#160;&#160;&#160;&#160; if index['name'] not in ct.indexes():
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; ct.addIndex(index['name'], 'FieldIndex')
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; 
+&#160;&#160;&#160;&#160;&#160;&#160;&#160; atct.updateIndex(index['name'], index['friendlyName'], index['description'], True)
+&#160;&#160;&#160; 
+&#160;&#160;&#160; for entry in get_indexes():
+&#160;&#160;&#160;&#160;&#160;&#160;&#160; if entry['name'] not in ct.schema():
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; ct.addColumn(entry['name'])
+&#160;&#160;&#160;&#160;&#160;&#160;&#160; 
+&#160;&#160;&#160;&#160;&#160;&#160;&#160; atct.updateMetadata(entry['name'], entry['friendlyName'], entry['description'], True)</pre>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

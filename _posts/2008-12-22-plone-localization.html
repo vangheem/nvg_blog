@@ -1,0 +1,42 @@
+---
+layout: post
+title:  "Plone Localization"
+date:   2008-12-22 23:04:00
+categories: 
+description: Documenting my experience on adding French Language support to collective.plonetruegallery.  Good reference for how to do localization support in Plone products.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<ul><li>First off, in your product when setting labels and descriptions on content types, use PloneMessageFactory...<br>
+<pre>from zope.i18nmessageid import MessageFactory
+_ = MessageFactory("product.name")
+</pre>
+</li><li>Also, use the message factory in zope schemas and any other chance you are setting something that has labels that will be shown on the site</li><li>easy_insall i18ndude</li><li>Add a "locales" directory in your product</li><li>In your product's zcml, register the localization with something like this...<br>
+<pre>&lt;configure
+  xmlns="http://namespaces.zope.org/zope"
+  xmlns:i18n="http://namespaces.zope.org/i18n"
+  i18n_domain="collective.plonetruegallery"&gt; 
+
+    .......
+    &lt;i18n:registerTranslations directory="locales" /&gt;
+    .......
+
+&lt;/configure&gt;</pre>
+</li><li>You'll need a ".pot" file in the root of the locales directory.&#160; This is when we use i18ndude(assume we're in the product).&#160; This will look through your product and find any places where there can be language specific aspects.<br>
+<pre>i18ndude rebuild-pot --pot locales/myproduct.pot --create myproduct .</pre>
+</li><li>Then create a sub-directory in the locales directory for your language.&#160; Then create a "LC_MESSAGES" directory inside that.&#160; In the end you're structure will look something like this,<br>
+<pre>locales/fr/LC_MESSAGES</pre>
+</li><li>Now lets use i18ndude again to create a ".po" file for the language we just added support for.<br>
+<pre>i18ndude sync --pot locales/myproduct.pot locales/*/LC_MESSAGES/myproduct.po</pre>
+</li><li>Then just add the language customizations in the myproduct.po file.<br></li></ul>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

@@ -1,0 +1,49 @@
+---
+layout: post
+title:  "Using Plone as a Document Repository"
+date:   2011-04-14 02:40:00
+categories: python ocr plone
+description: Sharing my experience in using plone to OCR PDF documents and displaying the documents in the browser with Flex Paper.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <h2>Update</h2>
+<p class="callout"><b>It is recommended that you do not use this method anymore. Please use <a class="external-link" href="http://pypi.python.org/pypi/collective.documentviewer/1.5.1">collective.documentviewer</a> now which should cover all the use cases.</b></p>
+<p>We just released a new site that houses thousands of scanned PDF documents that are now viewable in the browser via <a class="external-link" href="http://flexpaper.devaldi.com/">Flex Paper</a>. We started with PDFs that were just scanned images. Plone, with the help of a few packages, then OCR'd and replaced the PDF with a searchable PDF counterpart.</p>
+<h2>Features</h2>
+<ul>
+<li>Convert Image PDFs to searchable versions</li>
+<li>Split large PDFs into multiple documents</li>
+<li>Overwrite metadata of PDF</li>
+<li>OCR text is then searchable via Plone search</li>
+<li>Online viewable version</li>
+<li>All document processing is done via asynchronous processes so adding documents is not slow</li>
+<li>Can monitor conversion asynchronous processes </li>
+</ul>
+<h2>Requirements</h2>
+<ul>
+<li><a class="external-link" href="http://plone.org/products/wc.pageturner">wc.pageturner</a> : For online viewable PDFs</li>
+<li><a class="external-link" href="http://pypi.python.org/pypi/wildcard.pdfpal">wildcard.pdfpal</a> : heavy lifting in PDF processing</li>
+<li><a class="external-link" href="http://pypi.python.org/pypi/plone.app.async">plone.app.async</a> : asynchronously process PDF documents</li>
+<li><a class="external-link" href="http://code.google.com/p/tesseract-ocr/">Tesseract</a> &gt; 3.0.1 system package</li>
+<li>swftools system package</li>
+<li>ghostscript system package</li>
+<li>hocr2pdf system package</li>
+<li>pdftk system package</li>
+<li>tiff2pdf system package</li>
+</ul>
+<h2>Caveats</h2>
+<ul>
+<li>Probably only works in Linux</li>
+<li>wildcard.pdfpal is pretty specific and isn't smart at if it should process the PDF. For instance, if the PDF is already searchable, it'll still try to convert it regardless.</li>
+<li>We're not really interested in wildly supporting pdfpal beyond our use case(that's why it's not listed on plone.org, but in the collective and on pypi). So if you're interested in implementing this, you might end up contributing to the project and cleaning up some of the cruft in the package.</li>
+</ul>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

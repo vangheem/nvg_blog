@@ -1,0 +1,21 @@
+---
+layout: post
+title:  "p4a on Plone 3.1 buildout"
+date:   2008-09-13 10:20:00
+categories: 
+description: Getting p4a.ploneaudio, p4a.plonevideo is a little difficult on Plone 3.1.  Here is the buildout that shows how to do it.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<p><br># Add additional eggs here<br># elementtree is required by Plone<br>eggs =<br>&#160;&#160;&#160; elementtree<br>&#160;&#160;&#160; p4a.plonevideo&gt;=1.1,&lt;=1.1.9999<br>&#160;&#160;&#160; p4a.plonevideoembed&gt;=1.1,&lt;=1.1.9999<br>&#160;&#160;&#160; p4a.ploneaudio<br>&#160;&#160;&#160; p4a.plonecalendar<br>&#160;&#160;&#160; p4a.audio<br>&#160;&#160;&#160; hachoir-core<br>&#160;&#160;&#160; hachoir-parser<br>&#160;&#160;&#160; hachoir-metadata<br>&#160;&#160;&#160; Products.basesyndication<br>&#160;&#160;&#160; Products.fatsyndication<br>&#160;&#160;&#160; <br># Reference any eggs you are developing here, one per line<br># e.g.: develop = src/my.package<br>develop =<br>&#160;&#160;&#160; src/p4a.ploneaudio<br>&#160;&#160;&#160; src/p4a.audio<br>&#160;&#160;&#160; <br># If you want to register ZCML slugs for any packages, list them here.<br># e.g. zcml = my.package my.other.package<br>zcml = <br>&#160;&#160;&#160; p4a.z2utils<br>&#160;&#160;&#160; p4a.subtyper<br>&#160;&#160;&#160; p4a.common<br>&#160;&#160;&#160; p4a.fileimage<br>&#160;&#160;&#160; p4a.audio<br>&#160;&#160;&#160; p4a.ploneaudio<br>&#160;&#160;&#160; p4a.video<br>&#160;&#160;&#160; p4a.videoembed<br>&#160;&#160;&#160; p4a.plonevideo<br>&#160;&#160;&#160; p4a.plonevideoembed<br>&#160;&#160;&#160; p4a.plonecalendar-meta<br>&#160;&#160;&#160; p4a.plonecalendar<br>&#160;&#160;&#160; p4a.ploneevent</p>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

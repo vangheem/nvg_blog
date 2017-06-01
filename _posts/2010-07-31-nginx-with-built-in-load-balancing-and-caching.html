@@ -1,0 +1,175 @@
+---
+layout: post
+title:  "nginx with built in load balancing and caching"
+date:   2010-07-31 00:15:00
+categories: 
+description: nginx can do it all. Short example to get nginx going with buildout to provide load balancing and caching.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <h2>Another Update</h2>
+<p>I've received an angry email telling me that I should feel shame and I am misleading people because the specific example I give below does not work for them. First off, I never meant this to be a comprehensive example--I don't have time for that. Second of all, I thought it was obvious that the implementor would need to fill in some of the details. This is just an example of how it can be done--NOT a drop in replacement.</p>
+<p>So, you may need to create cache directories, read some docs and customize some settings to get this going. Some effort is required on the implementor's end.</p>
+<h2 style="padding-left: 0px;">Update</h2>
+<p style="padding-left: 0px;">Some have commented that in using nginx to do your load balancing you lose session affinity since nginx won't send it's users to the same backend. This can hurt performance since each zeo client would potentially have to cache a single user's specific objects.</p>
+<p style="padding-left: 0px;">If you find this to be a problem, there is a&#160;<a class="external-link" style="padding-left: 0px;" href="http://code.google.com/p/nginx-sticky-module/">sticky nginx module</a> that will handle this for load balancing. With this, each browser will be sent to the same backend.</p>
+<h2>Introduction</h2>
+<p>Why muck around with HAProxy and Varnish when you can have nginx do it all for you. The setup is easy and it's a lot easier to maintain.</p>
+<h2>Installing nginx with buildout</h2>
+<p>You can setup nginx fairly easily with buildout. The only fancy part of our setup is that we're going to include the nginx cache purge module.</p>
+<ol>
+<li>Add the cache purge part to your buildout <br>
+<pre>[ngx_cache_purge]
+recipe = hexagonit.recipe.download
+url = http://labs.frickle.com/files/ngx_cache_purge-1.1.tar.gz
+strip-top-level-dir = true</pre>
+</li>
+<li>I needed the pcre source to compile also<br>
+<pre>[pcre-source]
+recipe = hexagonit.recipe.download
+url = ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.00.tar.gz
+strip-top-level-dir = true
+</pre>
+</li>
+<li>and the nginx part<br>
+<pre>[nginx-build]
+recipe = hexagonit.recipe.cmmi
+url = http://nginx.org/download/nginx-0.8.45.tar.gz
+configure-options =
+    --with-http_stub_status_module
+    --conf-path=${buildout:directory}/settings/nginx.conf
+    --error-log-path=${buildout:directory}/var/log/nginx-error.log
+    --pid-path=${buildout:directory}/var/nginx.pid
+    --lock-path=${buildout:directory}/var/nginx.lock
+    --with-pcre=${pcre-source:location}
+    --with-http_ssl_module
+    --add-module=${ngx_cache_purge:location}
+</pre>
+</li>
+<li>and finally, add it all to the parts directive<br>
+<pre>parts =
+    ...
+    pcre-source
+    ngx_cache_purge
+    nginx-build
+    ...
+
+</pre>
+</li>
+<li>After you re-run buildout, you'll be able to run nginx by issuing a command like this:<br>
+<pre>./parts/nginx/sbin/nginx -c /path/to/configuration/nginx.conf</pre>
+</li>
+</ol>
+<h2>nginx configuration</h2>
+<p>Here is a simple sample configuration for nginx configured with load balancing and caching. It can obvious get as complicated as you want it, but I definitely think this is easier than managing haproxy, varnish and nginx.</p>
+<pre>pid /path/to/buildout/var/nginx.pid;
+lock_file /path/to/buildout/var/nginx.lock;
+
+worker_processes 2;
+daemon off;
+
+events {
+    worker_connections 1024;
+}
+
+error_log /path/to/buildout/var/log/nginx-error.log warn;
+
+# HTTP server
+
+http {
+    server_names_hash_bucket_size 64;
+
+    # this is how you do simple round robin load balancing with nginx.
+	# you can define as many backup servers as you'd like here.
+    upstream plone {
+        server 127.0.0.1:8080;
+        server 127.0.0.1:8081;
+    }
+    
+    access_log /path/to/buildout/var/log/main-access.log;
+
+
+ 	# can specify multiple cache paths for different resources/paths/proxies
+    # if needed..
+    # the levels=1:2 just means it'll store the cache'd files 2 levels down in
+    # the folder structure
+    proxy_cache_path  /var/www/cache  levels=1:2 keys_zone=thecache:100m max_size=1000m inactive=600m;
+    proxy_temp_path /var/www/cache/tmp;
+
+    # Here is the caching purge handling. Purge request come in here
+    server {
+        listen 8089;
+        server_name www.example.com;
+
+        access_log /path/to/buildout/var/log/purge.log;
+
+        location / {
+      	  allow			127.0.0.1;
+      	  deny			all;
+      	  proxy_cache_purge thecache $scheme$proxy_host$request_uri;
+        }
+    }
+    
+    server {
+        listen 80;
+        server_name www.example.com;
+
+
+		# log for cache hits.
+		log_format cache '***$time_local '
+		                             '$upstream_cache_status '
+		                             'Cache-Control: $upstream_http_cache_control '
+		                             'Expires: $upstream_http_expires '
+		                             '"$request" ($status) '
+		                             '"$http_user_agent" ';
+
+		access_log /path/to/buildout/var/log/cache.log cache;
+
+        # Enable gzip compression
+        gzip             on;
+        gzip_min_length  1000;
+        gzip_proxied     any;
+        gzip_types       text/xml text/plain application/xml;
+
+        # Show status information on /_main-status
+        location = /_main_status_ {
+            stub_status on;
+            allow 127.0.0.1;
+            deny all;
+        }
+
+		# do not cache when users are logged in..
+        proxy_cache_bypass $cookie___ac;
+
+	    location / {
+	        proxy_redirect                  off;
+			proxy_set_header                Host $host;
+			proxy_set_header                X-Real-IP $remote_addr;
+			proxy_set_header                X-Forwarded-For $proxy_add_x_forwarded_for;
+			client_max_body_size            0;
+			client_body_buffer_size         128k;
+			proxy_send_timeout              120;
+			proxy_buffer_size               4k;
+			proxy_buffers                   4 32k;
+			proxy_busy_buffers_size         64k;
+			proxy_temp_file_write_size      64k;
+			proxy_connect_timeout           75;
+			proxy_read_timeout              205;   
+	        proxy_pass http://plone/VirtualHostBase/http/www.example.com:80/Plone/VirtualHostRoot/;
+
+	        proxy_cache_bypass $cookie___ac;
+	        proxy_cache thecache;
+	        proxy_cache_key $scheme$proxy_host$request_uri;
+	    }
+    }
+}
+</pre>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

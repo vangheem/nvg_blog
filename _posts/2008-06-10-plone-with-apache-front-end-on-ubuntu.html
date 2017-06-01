@@ -1,0 +1,52 @@
+---
+layout: post
+title:  "Plone with Apache Front End on Ubuntu"
+date:   2008-06-10 19:59:00
+categories: 
+description: How you can use apache to manage multiple plone instances and take care of the ugly urls
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<h2>Ubuntu Setup</h2>
+<pre>apt-get install apache2
+a2enmod rewrite
+a2enmod proxy</pre>
+<h2>Apache HTTP file</h2>
+<pre>NameVirtualHost *
+&lt;VirtualHost *&gt;
+    ServerAlias server.com
+    ServerSignature On
+    RewriteEngine on
+    RewriteRule ^/(.*) http://localhost:8080/VirtualHostBase/http/server.com:80/Site/VirtualHostRoot/$1 [P,L]
+&lt;/VirtualHost&gt;</pre>
+<h2>&#160;proxy.conf</h2>
+<pre>&lt;IfModule mod_proxy.c&gt;
+    #turning ProxyRequests on and allowing proxying from all may allow
+    #spammers to use your proxy to send email.
+    ProxyRequests Off
+    &lt;Proxy *&gt;
+         #AddDefaultCharset off
+         Order deny,allow
+         Allow from allow
+         #Deny from all
+         #Allow from 127.0.0.1 
+    &lt;/Proxy&gt;
+    # Enable/disable the handling of HTTP/1.1 "Via:" headers.
+    # ("Full" adds the server version; "Block" removes all outgoing Via: headers)
+    # Set to one of: Off | On | Full | Block
+&#160;&#160;&#160;&#160;&#160;&#160;&#160; 
+    ProxyVia On
+&lt;/IfModule&gt;</pre>
+<p>&#160;</p>
+<p>&#160;</p>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

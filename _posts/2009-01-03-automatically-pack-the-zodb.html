@@ -1,0 +1,47 @@
+---
+layout: post
+title:  "Automatically Pack The ZODB"
+date:   2009-01-03 13:25:00
+categories: Zope2 plone
+description: This just goes over how you can automatically have the ZODB packed once a day.  Does not use a cron job either.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <ul>
+<li>Add Products.ClockServer to your egg section in buildout.cfg</li>
+<li>Add something like this in your instance section<br>
+<pre>zope-conf-additional = 
+    &lt;clock-server&gt;
+      method /pack_it_all
+      period 86400
+      user admin
+      password password
+      host localhost
+   &lt;/clock-server&gt;&#160; 
+</pre>
+</li>
+<li>Re-run buildout</li>
+<li>Start server</li>
+<li>In the root of zope, create a "Script(Python)" with the id of "pack_it_all"</li>
+<li>To the contents, add something like this,<br>
+<pre>dbs=context.Control_Panel.Database
+names = dbs.getDatabaseNames()
+
+for name in names:
+  if name != 'temporary':
+    dbs[name].manage_pack(days=3)
+    print "packed %s" % name
+
+return printed</pre>
+</li>
+<li>This will pack all the databases you have in Zope once a day</li>
+</ul>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

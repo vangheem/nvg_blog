@@ -1,0 +1,67 @@
+---
+layout: post
+title:  "Building svn on SuSe 10.3 Enterprise Edition"
+date:   2008-11-04 03:50:00
+categories: 
+description: Credits go to T. Kim Nguyen on this
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<div>When you go fetch the source from <a href="http://subversion.tigris.org/" target="_blank">subversion.tigris.org</a>, make sure you get the matching dependencies package as well. &#160;This is from the INSTALL file:</div>
+<div>&#160;</div>
+<div>
+<blockquote>
+<div><font color="#000000">If you're just installing a Subversion client, the Subversion</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;team has created a package containing the minimal prerequisite</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;libraries (Apache Portable Runtime, Neon, and Zlib) called the</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;"dependency package" tarball or zipfile. &#160;You should be able to</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;find it at the same place that you downloaded the Subversion</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;tarball itself from. (Note that this is new as of Subversion</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;1.4.0; previous releases packaged the dependencies in the same</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;tarball as Subversion itself.) &#160;If you don't have these</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;libraries installed already, you can simply unpack the</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;dependency package "on top of" the Subversion package; for</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;example, if you are using a .tar.gz bundle on Unix, you could</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;type:</font></div>
+<div><font color="#000000"><br></font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160; &#160; &#160;$ tar xzvf subversion-1.x.x.tar.gz</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160; &#160; &#160;$ tar xzvf subversion-deps-1.x.x.tar.gz</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160; &#160; &#160;$ cd subversion-1.x.x</font></div>
+<div><font color="#000000"><br></font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;This will place 'apr', 'apr-util', 'neon', and 'zlib'</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;directories directly into your unpacked Subversion distribution,</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;where they will be automatically configured and built by</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;Subversion's build process.</font></div>
+<div><font color="#000000"><br></font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;Note: Because previous builds of Subversion may have installed older</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;versions of these libraries, you may want to run some of the cleanup</font></div>
+<div><font color="#000000">&#160;&#160; &#160; &#160;commands described in section II.B before installing the following.</font></div>
+</blockquote>
+</div>
+<div>I had to run those cleanup commands, which as shown in section II B:</div>
+<div>&#160;</div>
+<div>sh autogen.sh</div>
+<div>&#160;</div>
+<div>because I had some lingering stuff from previous build attempts</div>
+<div>&#160;</div>
+<div>Then all I had to do was</div>
+<div>&#160;</div>
+<div>./configure --with-ssl</div>
+<div>make</div>
+<div>make install</div>
+<div>&#160;</div>
+<div>and I was able to check out stuff from our <a href="https://141.233.238.172/svn/plone" target="_blank">https://141.233.238.172/svn/plone</a> URL.</div>
+<div>&#160;</div>
+<div>My SVN build on cmf2 is in /root/subversion-1.4.6 and contains the overlaid dependencies package.</div>
+<div>&#160;</div>
+Kim
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

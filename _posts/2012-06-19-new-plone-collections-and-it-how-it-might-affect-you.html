@@ -1,0 +1,50 @@
+---
+layout: post
+title:  "New Plone collections and it how it might affect you"
+date:   2012-06-19 22:15:00
+categories: 
+description: Summary of new collections, what it means for existing addons and how developers can be compatible with new and old.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <h2>Shiny new collections</h2>
+<p>The new collections provide a much nicer query UI with live results. Gier Baekholt has a short video online showing them off: http://blip.tv/eric-steele/geir-baekholt-plone-app-collection-3386446</p>
+<h2>Upgrading Plone</h2>
+<p>When upgrading your plone site, the old collections will still be available to you only they're be label "Collection (old-style)." Old collections will NOT be migrated to new-style collections.</p>
+<h2>Add-on product compatibility</h2>
+<p>Most add-ons right now that use collections for their functionality are not currently compatible.</p>
+<h2>Enabling old-style collections</h2>
+<p>If you're starting a new Plone site from scratch, the old collections will not be enabled by default and you may still want to use them on your site--especially if you're running add-ons that depend on the old-style collections yet.</p>
+<p>To manual enable old-style collections, follow these steps:</p>
+<ol>
+<li>Visit the ZMI(or append /manage onto the url of your plone site)</li>
+<li>Click "portal_types"</li>
+<li>Click "Topic (Collection (old-style))"</li>
+<li>Check the "Implicitly addable?"</li>
+<li>Click the "Save" button</li>
+</ol>
+<h2>Developing for old and new collections</h2>
+<p>New style collections still implement the queryCatalog method which results the results from the catalog query so most likely the only thing you'll need to change is interface registrations and references to portal_type.</p>
+<p>I have just updated collective.plonetruegallery for the new collections so I'll share some tips on integrating.</p>
+<h3>Conditional ZCML</h3>
+<p>In order to be backward compatible, you should use conditional zcml for any registrations or code that needs to be loaded. The collective docs has a <a class="external-link" href="http://collective-docs.plone.org/en/latest/zcml/tricks.html#id2">good section</a> on how to do this.</p>
+<p>A simple example in practice is:</p>
+<pre id="content">&lt;browser:page
+  zcml:condition="installed plone.app.collection"
+  name="myview"
+  for="plone.app.collection.interfaces.ICollection"
+  class=".views.MyView"
+  permission="zope2.View"/&gt;</pre>
+<h3>Registering an interface for new collection</h3>
+<pre id="content">&lt;class class="plone.app.collection.collection.Collection"<br> zcml:condition="installed plone.app.collection"&gt;<br> &lt;implements interface=".interfaces.IGallery" /&gt;<br>&lt;/class&gt;</pre>
+<h3>Retrieve the raw query</h3>
+<pre>from plone.app.querystring import queryparser<br>query = queryparser.parseFormquery(collectionobj, collectionobj.getRawQuery())&#160;</pre>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

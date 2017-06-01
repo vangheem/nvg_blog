@@ -1,0 +1,31 @@
+---
+layout: post
+title:  "How to Add Code Snippet Syntax Highlighting Your Plone Theme"
+date:   2016-06-23 22:44:00
+categories: plone javascript python html
+description: Simple how to on adding syntax highlighting to your plone diazo theme.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <p>This example is using <a href="https://highlightjs.org" target="_blank" data-linktype="external" data-urltype="/view" data-val="https://highlightjs.org">highlightjs</a>.</p>
+<p>First off, start include the js and css in your theme html file in the head section:</p>
+<pre>&lt;link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/styles/default.min.css"&gt;</pre>
+<p>&#160;</p>
+<p>Then at the bottom of the theme file, before the closing body tag, add the JavaScript dependency.</p>
+<pre>&lt;script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"&gt;&lt;/script&gt;</pre>
+<p>If you're on Plone 5, you'll need to include this just before the JavaScript file because highlight js is expecting requirejs compilation:</p>
+<pre>&lt;script&gt;<br>original_define = define;<br>define = undefined;<br>&lt;/script&gt;</pre>
+<p>Then, the glue JavaScript code:</p>
+<pre>&lt;script&gt;<br>$(document).ready(function() {<br> $('pre').each(function(i, block) {<br>   hljs.highlightBlock(block);<br> });<br>});<br>&lt;/script&gt;</pre>
+<p>This example will automatically transform all pre tags. You can change it to use "code" or any other tag that makes more sense for your site. You can also customize the selector to only work for particular page types or views.</p>
+<p>The whole JavaScript integration script will look like this for Plone 5 when it's all put together(placed at the bottom of your html theme file):</p>
+<pre>&lt;script&gt;<br>original_define = define;<br>define = undefined;<br>&lt;/script&gt;<br>&lt;script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.4.0/highlight.min.js"&gt;&lt;/script&gt;<br>&lt;script&gt;<br>define = original_define;<br>$(document).ready(function() {<br> $('pre').each(function(i, block) {<br> hljs.highlightBlock(block);<br> });<br>});<br>&lt;/script&gt;</pre>
+          </div>
+          </div>
+          </div>
+      </div>
+    </div>
+  

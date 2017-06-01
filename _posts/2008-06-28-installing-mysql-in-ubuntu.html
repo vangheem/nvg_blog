@@ -1,0 +1,77 @@
+---
+layout: post
+title:  "Installing mySQL in Ubuntu"
+date:   2008-06-28 07:39:00
+categories: 
+description: Short howto of the commands I went through to install mySQL in Ubuntu
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<h2>Install</h2>
+<pre>apt-get install mysql-server mysql-php5 phpmyadmin
+</pre>
+<h2>Setup Apache for phpmyadmin</h2>
+<ul><li>Copy conf file from phpmyadmin to sites-enabled directory</li></ul>
+<pre>cp /etc/phpmyadmin/apache.conf /etc/apache2/sites-available/
+vi /etc/apache2/sites-available/apache.conf
+</pre>
+<ul><li>Sample conf setup for virtual host</li></ul>
+<pre>&lt;VirtualHost *&gt;
+ServerName mysql.dilucidate.com
+DocumentRoot /usr/share/phpmyadmin
+ServerAlias mysql.dilucidate.com
+&lt;Directory /usr/share/phpmyadmin&gt;
+        Options Indexes FollowSymLinks
+        DirectoryIndex index.php
+        
+        # Authorize for setup
+        &lt;Files setup.php&gt;
+            # For Apache 1.3 and 2.0
+            &lt;IfModule mod_auth.c&gt;
+                AuthType Basic
+                AuthName "phpMyAdmin Setup"
+                AuthUserFile /etc/phpmyadmin/htpasswd.setup
+            &lt;/IfModule&gt;
+            # For Apache 2.2
+            &lt;IfModule mod_authn_file.c&gt;
+                AuthType Basic
+                AuthName "phpMyAdmin Setup"
+                AuthUserFile /etc/phpmyadmin/htpasswd.setup
+            &lt;/IfModule&gt;
+            Require valid-user
+        &lt;/Files&gt;
+        &lt;IfModule mod_php4.c&gt;
+                AddType application/x-httpd-php .php
+
+                php_flag magic_quotes_gpc Off
+                php_flag track_vars On
+                php_flag register_globals Off
+                php_value include_path .
+        &lt;/IfModule&gt;
+        &lt;IfModule mod_php5.c&gt;
+                AddType application/x-httpd-php .php
+
+                php_flag magic_quotes_gpc Off
+                php_flag track_vars On
+                php_flag register_globals Off
+                php_value include_path .
+        &lt;/IfModule&gt;
+&lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</pre>
+<pre>ln -s /etc/apache2/sites-available/mysql.conf /etc/apache2/sites-enabled/mysql.conf
+</pre>
+<ul><li>Restart apache</li></ul>
+<pre>/etc/init.d/apache2 restart
+</pre>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

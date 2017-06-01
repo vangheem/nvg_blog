@@ -1,0 +1,70 @@
+---
+layout: post
+title:  "Document Viewer Integration in Plone"
+date:   2012-04-29 11:11:00
+categories: ocr Zope2 plone Document Management
+description: Presenting the collective.documentviewer package for plone that allows you to display PDFs and other office documents.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <p><a class="external-link" href="http://plone.org/products/document-viewer/">collective.documentviewer</a> integrates the great <a class="external-link" href="https://github.com/documentcloud/document-viewer">New York Times Document Viewer</a> into Plone.</p>
+<h3>Features</h3>
+<ul class="simple">
+<li>OCR</li>
+<li>Searchable on OCR text</li>
+<li>works with many different document types</li>
+<li>plone.app.async integration with task monitor</li>
+<li>configuration options</li>
+<li>PDF Group view for display groups of PDFs</li>
+</ul>
+<h3>Installation</h3>
+<p>There is an extensive set of system installation requirements that you must install in order for document viewer to work correctly. Additionally, it is recommended that you install and setup plone.app.async along with this package.</p>
+<h3>How it works</h3>
+<p>The <a class="external-link" href="http://documentcloud.github.com/docsplit/">docsplit</a> tool is used to generate images and text files for each PDF. The viewer is simply just a viewer of images and text files so it's easy to style and customize. The downside of this is that, for every PDF page, 4 files are generated. For sites with a lot of large PDFs, even with blog storage, it's a lot of extra data the zodb has to manage. That is why basic file storage is also available.</p>
+<p>The OCR text is also indexed locally with the PDF(using repoze.catalog) and globally with the plone catalog. This is done because a custom index is required for document viewer in order to search text in the PDF.</p>
+<h3>Configuration Options</h3>
+<p>After product activation, there will be a control panel item, "Document Viewer Settings."</p>
+<ul>
+<li>Image sizes -- Customize the size of images generated for the viewer</li>
+<li>Storage type -- Allows you to setup file storage for your PDF data</li>
+<li>OCR -- by default, this is off because it can take quite some time to OCR documents(and with no plone.app.async installed, some users could end up being very unhappy)</li>
+<li>Detect Text -- detect if text is already found on PDF, if so, do not OCR</li>
+<li>Auto select layout -- automatically, for PDF and any enabled document types, select the document viewer layout</li>
+<li>Auto layout type -- the types of files that should also be enabled for the document viewer layout.</li>
+</ul>
+<h2>A Tour</h2>
+<p>With screenshots, I will go over the various features.</p>
+<h3>Settings</h3>
+<p>Make sure to customize any settings before you start using it. Also, make sure to activate any office formats you'd like to be able to use:</p>
+<p><img alt="ScreenShot20120429at5.29.39AM.png" class="image-inline" src="_large.png"></p>
+<h3>The Viewer</h3>
+<p><img alt="Document Viewer Viewer" class="image-inline" src="_large.png" width="715px"></p>
+<p><img alt="Document Viewer Pages" class="image-inline" src="_large.png" width="715px"></p>
+<p><img alt="Document Viewer Search" class="image-inline" src="_large.png" width="715px"></p>
+<h3>Group View</h3>
+<p>A view is also added for folders and collections to display groups of PDFs and search within the groups.</p>
+<p><img alt="Document Viewer Group View" class="image-inline" src="_large.png" width="715px"></p>
+<h3>Converting Office Documents</h3>
+<p>Office documents are also then able to be converted for the viewer.</p>
+<p><img alt="Document Viewer Excel Doc" class="image-inline" src="_large.png" width="715px"></p>
+<h3>Async Integration</h3>
+<p>How plone.app.async integration is managed.</p>
+<p>You can view the current status of your conversion async task by clicking the "Document Viewer Convert" button at any time. Or, if it isn't converting, you can reinitiate conversion there.</p>
+<p><img alt="Where you can initiate conversions and see status." class="image-inline" src="_large.png" width="715px"></p>
+<p>You can also monitor all tasks currently in the queue:</p>
+<p><img alt="Document Viewer Async tasks" class="image-inline" src="_large.png" width="715px"></p>
+<h2>What's left</h2>
+<ul>
+<li>It's not internationalized at all. Apologies to non-english plone users.</li>
+<li>Better mobile viewer</li>
+<li>If you're converting a lot of documents at once with plone.app.async, there seems to be a issue with conflict errors. Unfortunately, this could cause your document to be converted more than once..</li>
+</ul>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

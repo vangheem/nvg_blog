@@ -1,0 +1,42 @@
+---
+layout: post
+title:  "Plone 5 Widgets Sneak Peak"
+date:   2013-07-26 04:42:00
+categories: plone widgets python
+description: A preview of the new widgets for Plone 5 and other details related the UX/UI improvements going on.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <h2 class="title">Improving the Plone UI</h2>
+<p>As part of the improved UI/UX development going on for Plone 5, many have been working on improved widgets. The goals are simple:</p>
+<blockquote>
+<ul class="simple">
+<li>use as little different widgets as possible(re-use the best widgets where it makes sense)</li>
+<li>use the best possible widgets available</li>
+<li>write better, testable JavaScript</li>
+<li>make it easy to contribute to Plone's UI and JavaScript without having to know Python and Plone</li>
+</ul>
+</blockquote>
+<div class="section" id="the-project">
+<h3>The Project</h3>
+<p>To accomplish the UX/UI improvements for Plone 5, the <a class="reference external" href="http://plone.github.io/mockup/dev/" target="_blank">mockup project</a> was started. I recommend you reading the documentation there for details on the goals of the project, how to develop and how it works.</p>
+<p>Additionally, <a class="reference external" href="https://github.com/plone/plone.app.widgets" target="_blank">plone.app.widgets</a> was created to provide an integration package of the mockup project to Plone so that people running Plone 4.3 can install and use the widget improvements right away--please install plone.app.widgets and give us feedback and bug reports!</p>
+<p>Lastly, related to the plone.app.widgets project, <a class="reference external" href="https://github.com/plone/plone.app.toolbar" target="_blank">plone.app.toolbar</a> is a package designed to move all of Plone's management and editing interface into a toolbar outside of the main content area. One of the major advantages of the drastic change in Plone's UI is that theming all the sudden becomes much easier with diazo since themers will no longer need to worry about theming Plone's editing interface. As with plone.app.widgets, plone.app.toolbar is installable right now with Plone 4.3. Please give it a try. It has some major rough edges so don't install on a production server.</p>
+</div>
+<div class="section" id="demonstration">
+<h3>Demonstration</h3>
+<p>Here is a short video of the new TinyMCE 4, select2 and related items widgets in action:</p>
+
+<iframe width="640" height="480" src="//www.youtube.com/embed/z6ZGxsOxKkk" frameborder="0" allowfullscreen></iframe>
+
+<p>I'll try to release more demos in the following weeks/months as development continues of Plone's widgets and toolbar.</p>
+</div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

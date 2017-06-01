@@ -1,0 +1,35 @@
+---
+layout: post
+title:  "Plone 4 Upgrade"
+date:   2010-05-15 13:40:00
+categories: plone upgrades
+description: Thoughts on moving the server to Plone 4.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <p>Last night I decided to take some time to move this site over to Plone 4. The repoze.zope2 build I had previously was buggy and I am starting to dislike Deliverance a bit.</p>
+<h2>Snags</h2>
+<ul>
+<li>the search didn't work because of this migration issue http://dev.plone.org/plone/ticket/10360</li>
+<li>old file types aren't migrated to blob http://dev.plone.org/plone/ticket/10365</li>
+<li>archetypes don't want to use the new add views--should probably report this</li>
+<li>If you have the jquery UI package installed, it'll mess with some of Plone's JS for some reason--I just disabled it.</li>
+<li>some other control panel entries and menu items were not fully migrated, still pointing to old templates</li>
+</ul>
+<p>&#160;</p>
+<h2>Benefits</h2>
+<ul>
+<li>FAST--running this on a linode with 512MB of ram. 2 zeo clients and with CacheSetup, this thing is very fast. Much faster than Plone 3.</li>
+<li>Just more polished than Plone 3--with usability enhancements and a new theme, it's great.</li>
+<li>I haven't found a product that wasn't compatible with Plone 4 yet--although, sometimes I needed to do some digging or use an svn checkout to get the compatible version</li>
+</ul>
+<p>&#160;</p>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

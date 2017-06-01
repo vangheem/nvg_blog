@@ -1,0 +1,60 @@
+---
+layout: post
+title:  "Managing Open Source Contributions"
+date:   2017-03-29 07:16:00
+categories: plone python open source
+description: Tips on managing your open source contributions
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          </div>
+      </div>
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="movable removable mosaic-tile mosaic-IDublinCore-description-tile">
+          <div class="mosaic-tile-content">
+          
+    <span id="form-widgets-IDublinCore-description" class="textarea-widget text-field">Tips on managing your open source contributions</span>
+
+
+          </div>
+          </div>
+        </div>
+      </div>
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="movable removable mosaic-tile mosaic-plone.app.standardtiles.rawhtml-tile">
+          <div class="mosaic-tile-content">
+          <p>Today, I noticed a Plone developer asking a question about galleries...</p>
+          </div>
+          </div>
+          <div class="movable removable mosaic-tile mosaic-castle.cms.tweet-tile">
+          <div class="mosaic-tile-content">
+          <div class="castle-tile-wrapper"><div style="padding:5px;" class="pat-tweettext" data-pat-tweettext='{"settings": {"cards": "visible"}, "tweetID": "847009381485072384"}'>
+</div>
+</div>
+          </div>
+          </div>
+          <div class="movable removable mosaic-tile mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <p><a href="https://github.com/collective/collective.plonetruegallery" data-linktype="external" data-urltype="/view" data-val="https://github.com/collective/collective.plonetruegallery">collective.plonetruegallery</a>&#160;is one of my oldest open source projects. I originally created it when I was an intern at the University of Wisconsin Oshkosh working under Kim&#160;Nguyen. It is a product that allows you to plugin different gallery implementations. So there are various collective.ptg.* packages around if you want to use some different gallery implementation.</p>
+<p>The last few years I've handed over the reigns to <a href="https://github.com/espenmn" data-linktype="external" data-urltype="/view" data-val="https://github.com/espenmn">Espen</a>&#160;who has had far more interest in the project than I've had. I haven't been using the project myself as I responded with...</p>
+          </div>
+          </div>
+          <div class="movable removable mosaic-tile mosaic-castle.cms.tweet-tile">
+          <div class="mosaic-tile-content">
+          <div class="castle-tile-wrapper"><div style="padding:5px;" class="pat-tweettext" data-pat-tweettext='{"settings": {"cards": "visible"}, "tweetID": "847050124165627904"}'>
+</div>
+</div>
+          </div>
+          </div>
+          <div class="movable removable mosaic-tile mosaic-plone.app.standardtiles.rawhtml-tile">
+          <div class="mosaic-tile-content">
+          <p>Anyways, that prompted me to talk about managing open source contributions. So let's move on to the meat of this blog post.</p><h2>What happens to your open source projects<br></h2><p>It's difficult&#160;for most people who open source and manage many&#160;projects to continue maintenance of them over time. Over time, your focus can shift to other problems. You may no longer&#160;even use the package you're supposed to be maintaining.</p><h2>Complexity over time</h2><p>Unless managed appropriately, open source projects tend to get more complex and less focused on the original goal of the project. This is what was expressed in the tweet above and I won't dispute the "over-engineered and&#160;ugly" comment very far.</p><p>A simple example of how this happens&#160;is from another one of my old open source projects <a href="https://github.com/collective/collective.easyslider/" data-linktype="external" data-urltype="/view" data-val="https://github.com/collective/collective.easyslider/" data-mce-href="https://github.com/collective/collective.easyslider/">collective.easyslider</a>. Originally, the slider configuration probably only consisted of 5 options. Today, there are <a href="https://github.com/collective/collective.easyslider/blob/master/collective/easyslider/interfaces.py#L75" data-linktype="external" data-urltype="/view" data-val="https://github.com/collective/collective.easyslider/blob/master/collective/easyslider/interfaces.py#L75" data-mce-href="https://github.com/collective/collective.easyslider/blob/master/collective/easyslider/interfaces.py#L75">25 different configuration options</a> with a couple different ways to use it. Every option, feature, etc adds more code to maintain and adds to the complexity of the project.</p><h3>How&#160;does complexity happen?</h3><p>This usually happens because a user wants to implement their corner case and offers to implement the functionality into the core project. This sounds nice; however, it incurs maintenance and complexity costs.</p><p>I've also been paid as a freelancer to implement additional functionality into the open source projects I manage. As a free lancer, to keep the project focussed, concise and easier to maintain over time, consider shipping an extension of the original project that overrides/extends the features. You can even consider delivering fork of the project.</p><h3>Just say no</h3><p>Keep your projects focused and simple. Be okay with saying no to contributions. It's okay for people to fork and provide their own variant that implements their use-case.</p><h2>Do not open source everything</h2><p>Make sure to be choosey when deciding if you should open source something. Even if you do not mean to maintain an open source project for the general public, putting the repo public in your user github area might welcome a issue submission, direct message or email. Over time, this can be more messages, issues than you want to manage.</p><h3>Where/how to host your code</h3><p>If you're having trouble limiting your open source contributions, here are some tips:</p><ul><li>A good README: be up front, provide clear intentions of how the project might be supported</li><li>Community github organization: For communities like Plone, you can contribute code to a <a href="https://github.com/collective" data-linktype="external" data-urltype="/view" data-val="https://github.com/collective" data-mce-href="https://github.com/collective">community organization</a> to help encourage the rest of the community to collaboratively manage the project. You can be up front that you are open sourcing it and with what intentions you have to continue working on it.</li><li>Public github repo(issues disabled): tells consumers you are cool with open sourcing work but not interesting in maintaining a project around it.</li><li>Github gist: another good way to share code without having to maintain a project around it.</li><li>Private repo: if you have no interest in collaborating with an open source community.</li><li>Github organization: if you choose to build a project around a github organization, that usually says you are invested in maintaining a community around the project. Be prepared to manage users, documentation, issues and packages around that project. Examples being <a href="https://github.com/plone" data-linktype="external" data-urltype="/view" data-val="https://github.com/plone" data-mce-href="https://github.com/plone">Plone</a> and <a href="https://github.com/pylons" data-linktype="external" data-urltype="/view" data-val="https://github.com/pylons" data-mce-href="https://github.com/pylons">Pylons</a>.</li></ul><h2>Handing off/walking away</h2><p>An essential part of managing your open source contributions over time is to be able to hand projects off to others. People you hand a project off to should:</p><ul><li>users of the project</li><li>contributors to the project</li><li>interested in&#160;keeping the project going</li></ul><p>Looking back at the <a href="https://github.com/collective/collective.plonetruegallery" data-linktype="external" data-urltype="/view" data-val="https://github.com/collective/collective.plonetruegallery" data-mce-href="https://github.com/collective/collective.plonetruegallery">collective.plonetruegallery</a>&#160;project, I haven't made a commit to it in almost 2 years. There have still been fixes and various contributions and people still use the package but I've been completely hands off for a long time.</p>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

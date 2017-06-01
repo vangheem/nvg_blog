@@ -1,0 +1,41 @@
+---
+layout: post
+title:  "Use Custom Fields in Smart Folders Plone 2.5"
+date:   2008-05-14 15:35:00
+categories: plone
+description: This shows how you can add new columns/fields to sort by and retrieve in your smart folders for new content types.  This is useful if you have custom content types that you want to still use smart folders with.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <h2>Content Type</h2>
+<p>You'll need to make changes to the fields in your content type.</p>
+<blockquote>
+<pre>StringField('firstName',
+    widget=StringWidget(
+        label="First Name",
+    ),
+    <strong>index='FieldIndex:schema',</strong>
+);</pre>
+</blockquote>
+<p>The part in bold is what you'll need to do for your field in the content type.</p>
+<h2>Site Setup</h2>
+<p>Next you'll need to specify in site setup of your plone instance that you want smart folders to use it.</p>
+<ol>
+<li>Go to site setup</li>
+<li>Click "Smart Folder Settings"</li>
+<li>Select "smart folder metadata" tab</li>
+<li>Click "all fields"</li>
+<li>Find the field you just added and give it a new name(by default it uses its getter name)</li>
+<li>Save</li>
+</ol>
+<p><img alt="AddFieldSmartFolder" class="image-inline" src="../assets/img/Picture1.png/image_preview"></p>
+<p>&#160;</p>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

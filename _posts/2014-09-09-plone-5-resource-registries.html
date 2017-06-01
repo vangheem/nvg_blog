@@ -1,0 +1,78 @@
+---
+layout: post
+title:  "Plone 5 Resource Registries"
+date:   2014-09-09 03:20:00
+categories: widgets sprint javascript plone ui python
+description: A brief exploration of the new Resource Registries in Plone 5.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <p>At the zidanca sprint this past month a few of us worked on the integration
+of the mockup project in Plone 5.</p>
+<div class="section" id="mockup">
+<h3>Mockup</h3>
+<p>The <a class="reference external" href="https://github.com/plone/mockup">mockup project</a> is where JavaScript
+patterns for Plone 5 are. Plone is getting an overhaul in the JavaScript
+technologies it's developed with utilizing a plethora of new JavsScript libraries
+along with new core technologies like RequireJS, Less and Grunt. We're also
+adopting Bower and NPM for packaging some JavaScript and CSS libraries.</p>
+</div>
+<div class="section" id="the-problem">
+<h3>The Problem</h3>
+<p>Currently, modifying and working with shipped JavaScript in Plone 5 alphas is
+hard. The only real way you can do it is by forking the mockup project
+and building your own JavaScript bundles. Obviously this is not a practical
+solution for normal integrators.</p>
+</div>
+<div class="section" id="the-solution">
+<h3>The Solution</h3>
+<p>We worked on a new Resource Registries which aims to allow you to work with,
+configure and customize RequireJS and Less files TTW. This allows even
+a novice to customize Plone's RequireJS resources and a hard core JavaScript
+developer to still use some modern technologies.</p>
+<p>The new Resource Registries assumes you're using RequireJS. Groups of JavaScript and
+CSS files are grouped together in objects called Bundles. When making changes to
+Bundles definitions, a new build step(button) is required. For old, legacy JavaScipt,
+a legacy bundle is defined which will simply list the JavaScript files in order
+like old-style JavaScript developers may be used to instead of resolving dependencies.</p>
+</div>
+<div class="section" id="why-not-something-else">
+<h3>Why not something else</h3>
+<p>We've had a few questions about the JavaScript technologies choices we made in mockup
+and Plone 5. We tried our best to choose the most stable, supported and popular
+technologies. We're attempting to wire this all up in a way where it'll be easier
+to evolve the stack as Plone grows. The JavaScript landscape is changing rapidly
+and unfortunately it is a moving target trying to nail down the right technologies.</p>
+<p>As EMCA 6 and things like web components start to get adoption in the next few years,
+Plone will also need to think about how these technologies fit into our stack and how
+we can accommodate them.</p>
+<p>I'd suggest integrators to not depend on anything much more than the UI patterns that
+Plone provides at it's core--not the underlying technologies those patterns depend on.
+It's possible the UI patterns will change a bit more frequently than we previously
+ever updated our JavaScript stack. If you're doing custom JavaScript development in
+your own projects, it might be more prudent to include all your own dependencies in
+your project and not depend on Plone's shipped pattern dependencies in order to be
+a bit more feature-proof from release to release.</p>
+</div>
+<div class="section" id="show-and-tell">
+<h3>Show and tell</h3>
+<p>Some screen shots of the new Resource Registries</p>
+<p>Resource Definition</p>
+<img alt="/image-repository/rr-resource/@@images/image/large" src="/assets/img/rr-resource_large.png">
+<p>Bundle Definition</p>
+<img alt="/image-repository/rr-bundle/@@images/image/large" src="/assets/img/rr-bundle_large.png">
+<p>Override</p>
+<img alt="/image-repository/rr-override/@@images/image/large" src="/assets/img/rr-override_large.png">
+<p>Less variables</p>
+<img alt="/image-repository/rr-less/@@images/image/large" src="/assets/img/rr-less_large.png">
+</div>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

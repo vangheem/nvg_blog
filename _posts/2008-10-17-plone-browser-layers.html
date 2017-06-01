@@ -1,0 +1,40 @@
+---
+layout: post
+title:  "plone browser layers"
+date:   2008-10-17 02:30:00
+categories: 
+description: Browser layers are used to specify views and resources and are only specific to your plone site.  It is much like what a theme does, you just don't need to select the theme in the site settings.  It works on a per site basis and is only enabled when your product is installed.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<p>Specify marker interface for layer</p>
+<pre>class IMyLayer(Interface):
+&#160;&#160;&#160; """Marker interface that defines a browser layer
+&#160;&#160;&#160; """
+</pre>
+<p>create a browserlayer.xml file in your GS profile(most likely in profiles/default) directory of your product.&#160; The file will look like this,</p>
+<pre>&lt;layers&gt;
+&#160;&#160;&#160; &lt;layer name="mylayer" 
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160; interface="productname.interfaces.IMyLayer" /&gt;
+&lt;/layers&gt;
+</pre>
+<p>Now with a viewlet or page you can just specify the layer with it so it only shows up in that layer.</p>
+<pre>&#160;&#160;&#160; &lt;browser:viewlet
+&#160;&#160;&#160;&#160;&#160;&#160;&#160; name="myviewlet"
+&#160;&#160;&#160;&#160;&#160;&#160;&#160; manager="plone.app.layout.viewlets.interfaces.IPortalTop"
+&#160;&#160;&#160;&#160;&#160;&#160;&#160; class=".viewlet.Myviewlet"
+&#160;&#160;&#160; &#160;&#160;&#160; layer="productname.interfaces.IMyLayer"
+&#160;&#160;&#160;&#160;&#160;&#160;&#160; permission="zope2.View" /&gt;
+</pre>
+<p>&#160;</p>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

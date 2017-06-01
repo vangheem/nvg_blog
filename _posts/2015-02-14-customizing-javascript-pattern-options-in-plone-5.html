@@ -1,0 +1,56 @@
+---
+layout: post
+title:  "Customizing JavaScript pattern settings in Plone 5"
+date:   2015-02-14 23:30:00
+categories: python ui plone
+description: There are a couple ways to customize some default pattern options coming in Plone 5.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <div id="through-the-web" class="section">
+<h3>Through the web</h3>
+<p>The most simple way to customize JavaScript pattern settings in Plone 5 is to use the new "Resource Registry" control panel.</p>
+<p>The new "Resource Registry" control panel now offers a simple form to provide base settings, in JSON format, for patterns.</p>
+<img src="_large.png" alt="../image-repository/pattern-options/@@images/image/large">
+<p>A quick example you could try is to customize the minimum number of letters that must be typed before livesearch is activated. To do this, you would add a pattern name of "livesearch" and a JSON value of <cite>{"minimumInputLength": 5}</cite> to require 5 letters to be input instead of the default, 4.</p>
+</div>
+<div id="addon-package" class="section">
+<h3>Addon package</h3>
+<p>Addon packages can also customize pattern settings. This is useful when pattern settings might be pulling information from configuration stored in the database which would not be static.</p>
+<p>Plone provides adapter registration lookups to render additional pattern settings on the site. To show how this works, we'll go through a simple example.</p>
+<p>First off, define the pattern option adapter:</p>
+<pre class="literal-block">import json
+from Products.CMFPlone.interfaces import IPatternsSettings
+
+class PatternSettingsAdapter(object):
+    implements(IPatternsSettings)
+
+    def __init__(self, context, request, field):
+        self.request = request
+        self.context = context
+        # some options are pulled from fields
+        # when getting called to put in default on the body tag,
+        # field will be None
+        self.field = field
+
+    def __call__(self):
+        # return custom pattern options here
+        return {'data-pat-mypattern': json.dumps({'foo': 'bar'})}
+</pre>
+<p>And then, wire up your adapter with some zcml:</p>
+<pre class="literal-block">&lt;adapter for="* * *"
+  factory=".mymodule.PatternSettingsAdapter"
+  provides="Products.CMFPlone.interfaces.IPatternsSettings"
+  name="mymoduel_settings" /&gt;
+</pre>
+<p>To see how this is currently being used in Plone core, take a look at <a class="reference external" href="https://github.com/plone/Products.CMFPlone/blob/master/Products/CMFPlone/patterns/__init__.py">Products.CMFPlone.patterns.__init__.py(master)</a>. Also, to see how these patterns are rendered, you can look at <a class="reference external" href="https://github.com/plone/plone.app.layout/blob/master/plone/app/layout/globals/patterns_settings.py">plone.app.layout.globals.pattern_settings.py(master)</a>.</p>
+</div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

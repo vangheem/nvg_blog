@@ -1,0 +1,31 @@
+---
+layout: post
+title:  "Add Eject Button To Boxee"
+date:   2010-02-15 12:45:00
+categories: media
+description: Boxee is great, but how could they have forgotten the eject button?
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<p>For some very odd reason, <a class="external-link" href="http://www.boxee.tv/">boxee</a>&#160;did not include an eject button in their version of the app. Luckily it is pretty easy to add your own eject button. Well, looking back it is easy; however, it took me a while to figure it out...</p>
+<p>First off, find a nice fancy eject button and place it into boxee's skin images folder, "<strong>skin/boxee/media/icons/". </strong>I used&#160;<a class="external-link" href="http://irumors.files.wordpress.com/2007/05/eject-copy.png">this one</a> and found it on google image search.</p>
+<p>Next insert these lines after line number <strong>231</strong> of the file <strong>skin/boxee/720p/boxee_main_menu.xml</strong></p>
+<pre>&lt;item&gt;
+    &lt;visible&gt;System.HasMediadvd&lt;/visible&gt;
+    &lt;controlid&gt;1300&lt;/controlid&gt;
+    &lt;thumb&gt;icons/eject.png&lt;/thumb&gt;
+    &lt;label&gt;Eject DVD&lt;/label&gt;
+    &lt;onclick&gt;XBMC.EjectTray()&lt;/onclick&gt;
+&lt;/item&gt;</pre>
+<p>And you're set. You should now have an eject button for your DVDs.</p>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

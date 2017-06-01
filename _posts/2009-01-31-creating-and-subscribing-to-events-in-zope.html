@@ -1,0 +1,48 @@
+---
+layout: post
+title:  "Creating and subscribing to events in Zope"
+date:   2009-01-31 20:35:00
+categories: 
+description: This will show you how to create events and subscribe to them using Zope 3 approaches.  These methods will also work in Plone.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<h2>Creating your event</h2>
+<ul><li>An event is just an interface definition and the event object declaration<br>
+<pre>import zope.component.interfaces
+from zope.interface import implements
+
+class IMyNewEvent(zope.component.interfaces.IObjectEvent):
+&#160;&#160;&#160; """An object has been modified"""
+
+class MyNewEvent(zope.component.interfaces.ObjectEvent):
+    """An object has been modified"""
+    implements(IMyNewEvent)
+</pre>
+</li></ul>
+<ul><li>The real magic happens when fire off the event<br>
+<pre>from zope.event import notify
+
+notify(MyNewEvent(context))</pre>
+</li><li>Now to subscribe to the event do something like this,<br>
+<pre>&lt;subscriber
+  for="myproduct.myobject
+       myproduct.interfaces.IMyNewEvent"
+  handler=".subscribers.event_handler"
+  /&gt;</pre>
+</li><li>Now in a file subscribers.py add the method event_handler like this,<br>
+<pre>def event_handler(obj, event):
+  # do something interesting here...
+  pass</pre>
+&#160;&#160; <br></li></ul>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

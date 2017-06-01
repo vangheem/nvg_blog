@@ -1,0 +1,67 @@
+---
+layout: post
+title:  "Using a BrowserView as a traversable adapter utility in Plone"
+date:   2009-01-31 20:19:00
+categories: 
+description: This will show you how to make a traversable multi-adapter on the context and request object that can be called within tal expressions and used as utilities elsewhere.  It is done the exact same way as the plone_tools, plone_context_state, plone_portal_state BrowserViews you see used often throughout Plone viewlets and tal expressions.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<ul><li>First off, you'll have to add this in one of your own Plone products.&#160; I will not go through creating a product in this tutorial.<br></li><li>Next, create a few files. Remember you can customize these to your liking.&#160; I will call this BrowserView "tool."</li>
+<ul><li>tool.py</li><li>interfaces.py</li></ul>
+<li>In the tool.py file do something like this,<br>
+<pre>from zope.interface import implements
+from zope.component import getMultiAdapter
+from plone.memoize.view import memoize, memoize_contextless
+
+from Acquisition import aq_inner
+from Products.CMFCore.utils import getToolByName
+from Products.Five.browser import BrowserView
+
+from interfaces import ITool
+
+class Tool(BrowserView): 
+
+  implements(IUWOshTools)
+
+  @memoize_contextless
+  def hello_world(self):
+    return "Hello, World!"</pre>
+</li><li>Now in interfaces.py do something like this,<br>
+<pre>from zope.interface import Interface
+
+class ITool(Interface):
+  def hello_world(self):
+    pass</pre>
+</li><li>In the interfaces.py file you'll need to declare each method you'll create in the Tool BrowserView</li><li>Now add this to your configure.zcml<br>
+<pre>&lt;browser:page
+  name="tool"
+  for="*"
+  permission="zope2.View"
+  class=".tool.Tool"
+  allowed_interface=".interfaces.ITool"
+  /&gt;
+
+&lt;!-- We need to make the request annotatable for this to work --&gt;
+  &lt;class class="ZPublisher.BaseRequest.BaseRequest"&gt;
+    &lt;implements interface="zope.annotation.interfaces.IAttributeAnnotatable" /&gt;
+  &lt;/class&gt;</pre>
+</li><li>Now in a tal expression you can do things like this,<br>
+<pre>here/@@tool/hello_world
+python: here.restrictedTraverse("@@tool").hello_world()</pre>
+</li><li>Or in code you can do something like this,<br>
+<pre>from zope.component import getMultiAdapter
+
+tool = getMultiAdapter((self.context, self.request), name=u'tool')</pre>
+</li><li>and you're done.&#160; SWEET!<br></li></ul>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

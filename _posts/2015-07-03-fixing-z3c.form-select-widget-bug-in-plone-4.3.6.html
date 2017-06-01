@@ -1,0 +1,35 @@
+---
+layout: post
+title:  "Fixing z3c.form multi select widget bug in Plone 4.3.6"
+date:   2015-07-03 15:40:00
+categories: plone
+description: Latest z3c.form has a nasty select widget bug that prevents data form being edited.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <div id="problem" class="section">
+<h3>Problem</h3>
+<p>There was a regression introduced in z3c.form 3.2.3. It seems to be affecting many people for some time. Here is an example of a issue that was just reported on collective.documentviewer: <a class="reference external" href="https://github.com/collective/collective.documentviewer/issues/50">https://github.com/collective/collective.documentviewer/issues/50</a></p>
+</div>
+<div id="the-fix" class="section">
+<h3>The fix</h3>
+<p>To fix, downgrade z3c.form to 3.2.1. In your buildout, pin the z3c.form version:</p>
+<pre class="literal-block">z3c.form = 3.2.1
+</pre>
+<p>Then, run buildout, restart your instance.</p>
+</div>
+<div id="future" class="section">
+<h3>Future</h3>
+<p>The bug is fixed here: <a class="reference external" href="https://github.com/zopefoundation/z3c.form/commit/ab2080a9cd69797167b09eb984787857bcc4d59e">https://github.com/zopefoundation/z3c.form/commit/ab2080a9cd69797167b09eb984787857bcc4d59e</a></p>
+<p>We're just waiting on a new release.</p>
+<p>This is affecting Plone 5 latest and Plone 4.3.6.</p>
+</div>
+          </div>
+          </div>
+          </div>
+      </div>
+    </div>
+  

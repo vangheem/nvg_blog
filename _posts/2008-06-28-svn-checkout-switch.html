@@ -1,0 +1,37 @@
+---
+layout: post
+title:  "SVN Reference"
+date:   2008-06-28 09:45:00
+categories: 
+description: various useful svn stuff...
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<h2>Relocate</h2>
+<p>You'll see an error like this,</p>
+<pre>svn: Commit failed (details follow):
+svn: MKACTIVITY of '/svn/collective/!svn/act/509f67a4-1ce2-4e6a-9f7f-58f697080127': 403 Forbidden (http://svn.plone.org)</pre>
+<p>Just issue this command,</p>
+<pre>svn switch --relocate http:// https://</pre>
+<h2>Revert To Previous Revision</h2>
+<pre>svn merge -r 123:124 ./</pre>
+<h2>&#160;Merge Branch Into Trunk</h2>
+<pre>svn merge -r 250:HEAD http://svn.host.com/svn/branch</pre>
+<h2>Add Local File To Repo</h2>
+<pre>svn import local_dir "path_to_repo"</pre>
+<p>&#160;</p>
+<p>&#160;The&#160;<a class="external-link" href="http://www.zope.org/DevHome/Subversion/ZopeSVNFAQ">Zope SVN Reference</a>&#160;is great help</p>
+<p>&#160;</p>
+<p>&#160;</p>
+<p>&#160;</p>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

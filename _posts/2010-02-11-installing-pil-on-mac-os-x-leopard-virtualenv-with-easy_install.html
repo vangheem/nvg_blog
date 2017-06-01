@@ -1,0 +1,39 @@
+---
+layout: post
+title:  "Installing PIL on Mac OS X Leopard virtualenv with easy_install"
+date:   2010-02-11 07:20:00
+categories: PIL setuptools
+description: What do you do when you need to install PIL in a virtualenv on Mac OS X and it won't build for you? I'll walk through getting it to work.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<h3>First off</h3>
+<div>If when you try installing PIL, you get an error like this</div>
+<pre>collect2: ld returned 1 exit status
+lipo: can't open input file: /var/folders/nO/nOf0lGB+GlGrFGnhcyaFPE+++TI/-Tmp-//ccqHwR4o.out (No such file or directory)
+error: Setup script exited with error: command 'gcc' failed with exit status 1</pre>
+<p>Then it's failing because it doesn't have the universal versions of some packages installed.&#160;</p>
+<p>You'll first need to install <a class="external-link" href="http://www.macports.org/">MacPorts</a>. You can download the <a class="external-link" href="http://distfiles.macports.org/MacPorts/MacPorts-1.8.2-10.5-Leopard.dmg">dmg install file</a>&#160;or just go to the <a class="external-link" href="http://www.macports.org/install.php">MacPorts installation page</a> for instructions on how to get it setup on your system.</p>
+<h3>Installing Universal Packages</h3>
+<div>&#160;</div>
+<div>Open up a terminal window and run these commands,</div>
+<pre>sudo port install libiconv +universal
+sudo port upgrade --enforce-variants zlib +universal
+sudo port install jpeg +universal
+sudo port install freetype2<span class="Apple-tab-span">	</span> +universal</pre>
+<h3>Now Install PIL&#160;</h3>
+<div>&#160;</div>
+<div>Now you should be able to run</div>
+<pre>./bin/easy_install <span class="Apple-style-span"><a href="http://dist.repoze.org/PIL-1.1.6.tar.gz" rel="nofollow">http://dist.repoze.org/PIL-1.1.6.tar.gz</a></span></pre>
+<p>&#160;This is a version of PIL that plays nice with setuptools.</p>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

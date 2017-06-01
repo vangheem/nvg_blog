@@ -1,0 +1,334 @@
+---
+layout: post
+title:  "High Availability Varnish Configuration for Plone"
+date:   2011-09-20 00:15:00
+categories: caching varnish plone
+description: How to get varnish to continue serving out stale, content when your backend may be down.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <h2>Why</h2>
+<p>There are many reasons why a backend server could go down or be unresponsivw and there is no reason that your caching proxy can't serve out stale content while it is down or slow to respond.</p>
+<h2>How</h2>
+<p>There are a few tricks that will help you get better performance out of varnish and that will trick varnish into serving stale content instead of an error.</p>
+<h3>Serving Stale Content</h3>
+<p><span>Restart the request and have varnish use an always down server on error so that it'll serve stale content right away</span></p>
+<ol>
+<li> Setup the fake backend
+<pre>...
+backend failapp { 
+  .host = "127.0.0.1"; 
+  .port = "9999"; 
+  .probe = { 
+    .url = "/hello/"; 
+    .interval = 12h; 
+    .timeout = 1s; 
+    .window = 1; 
+    .threshold = 1; 
+  } 
+}
+...</pre>
+</li>
+<li>Set the grace period on the request in vcl_recv
+<pre>...
+  if (!req.backend.healthy) {
+    set req.grace = 1d;
+  } else {
+     set req.grace = 15m;
+  }
+...</pre>
+</li>
+<li>Set grace period for response in vcl_fetch
+<pre>...
+set beresp.grace = 10d;
+...</pre>
+</li>
+<li>Set a marker error header in the vcl_error section and restart the request
+<pre>...
+sub vcl_error {
+  /* set a marker on so we know there is an error with the backends
+     and that we should serve out stale content */
+  if ( req.http.X-Varnish-Error != "1" &amp;&amp; req.request != "PURGE" &amp;&amp; req.restarts == 0) {
+    set req.http.X-Varnish-Error = "1";
+    return (restart);
+  }
+}
+...</pre>
+</li>
+<li>Check for the marker error header in the vcl_recv and set to already down backend
+<pre>...
+  if (req.http.X-Varnish-Error == "1") {
+    set req.backend = failapp;
+    unset req.http.X-Varnish-Error;
+  } else {
+    set req.backend = plone;
+  }
+...
+</pre>
+</li>
+</ol>
+<h3>Cleaning Up The URL</h3>
+<p>There is no need to cache the different hash urls(#) or different query parameters for google analytics</p>
+<pre>...
+  if (req.url ~ "\#") {
+    set req.url=regsub(req.url,"\#.*$","");
+  }
+  # Strip out Google related parameters
+  if(req.url ~ "(\?|&amp;)(utm_source|utm_medium|utm_campaign|gclid|cx|ie|cof|siteurl)=") {
+    set req.url=regsuball(req.url,"&amp;(utm_source|utm_medium|utm_campaign|gclid|cx|ie|cof|siteurl)=([A-z0-9_\-\.%25]+)","");
+    set req.url=regsuball(req.url,"\?(utm_source|utm_medium|utm_campaign|gclid|cx|ie|cof|siteurl)=([A-z0-9_\-\.%25]+)","?");
+    set req.url=regsub(req.url,"\?&amp;","?");
+    set req.url=regsub(req.url,"\?$","");
+  }
+...
+</pre>
+<h2>Full Example Configuration</h2>
+<p>In this configuration, keep some things in mind:</p>
+<ul>
+<li>The configuration is manually setting the cache age on these objects and relying more on purges to handle cache refreshes</li>
+<li>The configuration assumes the public site is not for logging in, so no cookie handling is happening</li>
+<li>The configuration sets additional response headers so you can see information on how varnish handled the response(ttl, grace, status, hit)</li>
+<li>This exact configuration is cleaned up from what I actually use in production and you'll need to clean it up and implement your own parts of it to an extent. Please don't assume that this is just a drop in replacement. </li>
+</ul>
+<pre>acl purge {
+  "localhost";
+  "127.0.0.1"; /* and everyone on the local network */
+  "10.10.10.10";
+}
+
+/* failapp is used to help trick varnish into using stale content */
+backend failapp { 
+  .host = "127.0.0.1"; 
+  .port = "9999"; 
+  .probe = { 
+    .url = "/hello/"; 
+    .interval = 12h; 
+    .timeout = 1s; 
+    .window = 1; 
+    .threshold = 1; 
+  } 
+}
+
+backend cms1 { 
+  .host = "10.10.10.1"; 
+  .port = "8080"; 
+  .connect_timeout = 10s; 
+  .max_connections = 30; 
+  .first_byte_timeout = 300s; 
+  .probe = { 
+    .url = "/"; 
+    .interval = 3s; 
+    .timeout = 3s; 
+    .window = 5; 
+    .threshold = 2; 
+    .initial = 1;
+  } 
+}
+backend cms2 { 
+  .host = "10.10.10.1"; 
+  .port = "8081"; 
+  .connect_timeout = 10s; 
+  .max_connections = 30; 
+  .first_byte_timeout = 300s; 
+  .probe = { 
+    .url = "/"; 
+    .interval = 3s; 
+    .timeout = 3s; 
+    .window = 5; 
+    .threshold = 2; 
+    .initial = 1;
+  } 
+}
+backend cms3 { 
+  .host = "10.10.10.1"; 
+  .port = "8082"; 
+  .connect_timeout = 10s; 
+  .max_connections = 30; 
+  .first_byte_timeout = 300s; 
+  .probe = { 
+    .url = "/"; 
+    .interval = 3s; 
+    .timeout = 3s; 
+    .window = 5; 
+    .threshold = 2; 
+    .initial = 1;
+  } 
+}
+backend cms4 { 
+  .host = "10.10.10.1"; 
+  .port = "8083"; 
+  .connect_timeout = 10s; 
+  .max_connections = 30; 
+  .first_byte_timeout = 300s; 
+  .probe = { 
+    .url = "/"; 
+    .interval = 3s; 
+    .timeout = 3s; 
+    .window = 5; 
+    .threshold = 2; 
+    .initial = 1;
+  } 
+}
+
+director plone round-robin {
+  { .backend = cms1; }
+  { .backend = cms2; } 
+  { .backend = cms3; } 
+  { .backend = cms4; } 
+}
+
+sub vcl_recv {
+  if (req.http.X-Varnish-Error == "1") {
+    set req.backend = failapp;
+    unset req.http.X-Varnish-Error;
+  } else {
+    set req.backend = plone;
+  }
+  if (req.request != "GET" &amp;&amp;
+      req.request != "HEAD" &amp;&amp;
+      req.request != "PUT" &amp;&amp;
+      req.request != "POST" &amp;&amp;
+      req.request != "TRACE" &amp;&amp;
+      req.request != "OPTIONS" &amp;&amp;
+      req.request != "DELETE" &amp;&amp;
+      req.request != "PURGE") {
+    /* Non-RFC2616 or CONNECT which is weird. */
+    return (pipe);
+   }
+
+  if (req.request != "GET" &amp;&amp; req.request != "HEAD" &amp;&amp; req.request != "PURGE") {
+    /* We only deal with GET and HEAD by default */
+    return (pass);
+  }
+
+/* Time to mess with the request */
+  unset req.http.Cookie;
+  unset req.http.User-Agent;
+  unset req.http.Accept-Charset;
+
+  if (req.http.Accept-Encoding) {
+    if (req.url ~ "\.(jpg|png|gif|gz|tgz|bz2|tbz|mp3|ogg|pdf|headerImage)$") {
+      # No point in compressing these
+      remove req.http.Accept-Encoding;
+    } elsif (req.http.Accept-Encoding ~ "gzip") {
+      set req.http.Accept-Encoding = "gzip";
+    } elsif (req.http.Accept-Encoding ~ "deflate") {
+      set req.http.Accept-Encoding = "deflate";
+    } else {
+      # unkown algorithm
+      remove req.http.Accept-Encoding;
+    }
+  }
+
+  # Strip hash, server doesn't need it.
+  if (req.url ~ "\#") {
+    set req.url=regsub(req.url,"\#.*$","");
+  }
+  # Strip out Google related parameters
+  if(req.url ~ "(\?|&amp;)(utm_source|utm_medium|utm_campaign|gclid|cx|ie|cof|siteurl)=") {
+    set req.url=regsuball(req.url,"&amp;(utm_source|utm_medium|utm_campaign|gclid|cx|ie|cof|siteurl)=([A-z0-9_\-\.%25]+)","");
+    set req.url=regsuball(req.url,"\?(utm_source|utm_medium|utm_campaign|gclid|cx|ie|cof|siteurl)=([A-z0-9_\-\.%25]+)","?");
+    set req.url=regsub(req.url,"\?&amp;","?");
+    set req.url=regsub(req.url,"\?$","");
+  }
+/* End modifying the request */
+
+  if (req.request == "PURGE") {
+    if (!client.ip ~ purge) {
+       error 405 "Not allowed.";
+    }
+    return(lookup);
+  }
+
+/* grace and saint related settings.
+   To ensure to always serve static content. */
+  if (!req.backend.healthy) {
+    set req.grace = 1d;
+  } else {
+     set req.grace = 15m;
+  }
+/* end saint/grace mode stuff */
+
+  return (lookup);
+}
+
+sub vcl_error {
+  /* set a marker on so we know there is an error with the backends
+     and that we should serve out stale content */
+  if ( req.http.X-Varnish-Error != "1" &amp;&amp; req.request != "PURGE" &amp;&amp; req.restarts == 0) {
+    set req.http.X-Varnish-Error = "1";
+    return (restart);
+  }
+}
+
+sub vcl_hash {
+   set req.hash += req.url;
+   if (req.http.Accept-Encoding) { set req.hash += req.http.Accept-Encoding; }
+   return (hash);
+}
+
+sub vcl_fetch {
+  unset beresp.http.set-cookie;
+  if (beresp.status == 500) {
+    set beresp.saintmode = 5s;
+    set req.http.X-Varnish-Error = "1";
+    return (restart);
+  }
+
+  /* override ttls */
+  if(beresp.status == 301 || beresp.status == 302){
+    /* all redirects can be cached for a long time. Granted we always have invalidation. */
+    set beresp.ttl = 5h;
+  } else if(req.url ~ ".*portal_css.+cachekey.*\.(css|js)$") {
+    /* generated css/js files should be cached for a LONG time. All unique urls. */
+    set beresp.ttl = 10d;
+  } else if (req.url ~ "(\.jpg|\.png|\.gif|\.gz|\.tgz|\.bz2|\.tbz|\.mp3|\.ogg|\.pdf|\.css|\.js|/image_(large|preview|mini|thumb|tile))$") {
+    /* all file type resources can be cached for an hour */
+    set beresp.ttl = 1h;
+  }else{
+    /* everything else */
+    set beresp.ttl = 30m; /* how long should varnish cache it? */
+  }
+  set beresp.grace = 10d; /* The max amount of time to keep object in cache */
+  set beresp.http.X-Varnish-beresp-ttl = beresp.ttl;
+  set beresp.http.X-Varnish-beresp-grace = beresp.grace;
+  set beresp.http.X-Varnish-beresp-status = beresp.status;
+}
+
+sub vcl_hit {
+   if (req.request == "PURGE") {
+     set obj.ttl = 0s;
+     error 200 "Purged.";
+    }
+}
+
+sub vcl_miss {
+  if (req.request == "PURGE") {
+    error 404 "Not in cache.";
+  }
+}
+
+
+sub vcl_deliver {
+  if (obj.hits &gt; 0) {
+    set resp.http.X-Cache = "HIT";
+  } else {
+    set resp.http.X-Cache = "MISS";
+  }
+}
+</pre>
+<h2>Additional Tips</h2>
+<ul>
+<li>Varnish doesn't have nice error messages, so use nginx to override 500 errors to your liking if, for some reason, there is an error on a resource that was not in the stale cache.</li>
+<li>Varnish's cache is NOT persistent(although, varnish 3.0 is supposed to be) so if you restart your varnish process, you'll lose your long term cache.</li>
+<li>Also, you're limited by the size of your size. If you have a large site, make sure that you set the varnish file cache size to something very large so that you're able to utilize the use of stale content.</li>
+</ul>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

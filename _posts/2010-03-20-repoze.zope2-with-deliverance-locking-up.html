@@ -1,0 +1,22 @@
+---
+layout: post
+title:  "repoze.zope2 with Deliverance locking up"
+date:   2010-03-20 21:52:00
+categories: 
+description: How to make sure your repoze.zope2 wsgi setup with Deliverance will not lock up on you.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<p>I was having issues with my repoze.zope2 and Deliverance setup locking up on me. Turns out, since I had some of sub-requests in my Deliverance rules, it was occasionally causing a race condition where all the wsgi server threads were taken up and an existing thread was making a sub-request.</p>
+<p>The fix is to remove all sub-requests in the deliverance rules file if possible, add more threads threads in the repoze.zope2 wsgi server configuration, or use a different wsgi server that doesn't restrict the amount of threads--so it'll add a new thread if needed. A better solution, IMO, would be to just have a different server, serve the theme files. Anything to make it not make sub-requests against the same wsgi server.</p>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

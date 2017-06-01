@@ -1,0 +1,42 @@
+---
+layout: post
+title:  "Introduction tus python package"
+date:   2014-01-22 05:30:00
+categories: plone python
+description: The tus python package aims to provide support for resumable file uploads.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <div class="section" id="what-is-tus">
+<h3>What is tus?</h3>
+<p><a class="reference external" href="http://tus.io/">tus</a> is a protocol aimed at supporting resuamble file uploads on the web.</p>
+</div>
+<div class="section" id="features">
+<h3>Features</h3>
+<ul class="simple">
+<li>simple protocol</li>
+<li>resumable uploads</li>
+<li>chunking</li>
+</ul>
+</div>
+<div class="section" id="python">
+<h3>Python</h3>
+<p>There was previously <a class="reference external" href="https://github.com/vayam/tuspy">tuspy</a> which was only a client implementation but not useful for existing python frameworks.</p>
+<p>I created the <a class="reference external" href="https://github.com/vangheem/tus">tus python package</a> to be an implementation of this standard that works WebOb, Zope2 and WSGI. Additional adapters are welcome.</p>
+<p>Check out the <a class="reference external" href="https://github.com/vangheem/tus">docs</a> to see how it works. Also, look for my next blog post in activate tus resumable uploads with wildcard.foldercontents--which also means this will hopefully land in Plone 5.</p>
+</div>
+<div class="section" id="implementation">
+<h3>Implementation</h3>
+<p>Javascript, along with a modern browser, is required to utilize the tus protocol. The <a class="reference external" href="https://github.com/tus/tus-jquery-client">tus-jquery-client</a> is provided to help in this integration.</p>
+<p>Keep an eye <a class="reference external" href="https://github.com/tus/tus-jquery-client/pull/6">on this pull request</a> which aims to bring chunking support to the Javascript client.</p>
+</div>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

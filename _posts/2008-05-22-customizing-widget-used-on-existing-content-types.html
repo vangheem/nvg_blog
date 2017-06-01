@@ -1,0 +1,57 @@
+---
+layout: post
+title:  "Customizing Widget Used On Existing Content Types"
+date:   2008-05-22 18:02:00
+categories: 
+description: Shows how you would go about customizing the widgets used on existing content types.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<h2>Situation</h2>
+<p>You are using a type provided by plone that uses archetypes and
+you do not like a particular widget the archetypes has implemented for
+the field.&#160; You need to make a custom widget only for that type.&#160;
+Problem is that you cannot override the widget page template file,
+because the type is registered with specifically that widget and
+overriding won't work.&#160;</p>
+<p>
+&#160;&#160;&#160; To accomplish this task, you need to override the content type
+definition and create a new widget that is based off the old widget.</p>
+<p>&#160;</p>
+<h2>Solution</h2>
+<div id="parent-fieldname-text" class="plain kssattr-atfieldname-text kssattr-templateId-newsitem_view kssattr-macro-text-field-view inlineEditable">
+<ol><li>Decide what widget you need to customize.&#160; In this case, I'm customizing the InAndOut widget for the Smart Folder Type.</li><li>Copy
+the inandout.pt file(or widget page template file you are customizing)
+from the Products/Archetypes/skins/widgets folder into your skins
+directory and rename as needed.</li><li>Make customizations to widget page template file.</li><li>In
+your install script you are going to need to override the value for the
+"macro" attribute for the widget in the field of your schema that you
+want to change.</li><li>Then
+you'll need to re-register the content type(you'll need to look at the
+content type definitely to do this most likely because you need to know
+the field name).<br>
+</li><li>In the case of the smart folder, it would look like this,</li></ol>
+</div>
+<p>&#160;</p>
+<pre>from Products.ATContentTypes.content.topic import ATTopic&#160;&#160;&#160; 
+from Products.ATContentTypes.config import PROJECTNAME
+from Products.ATContentTypes.content.base import registerATCT
+
+topic_fields = ATTopic.schema.fields()
+
+for field in topic_fields:
+  if field.getName() == 'customViewFields':
+    field.widget.macro = "my_inandout"
+
+registerATCT(ATTopic, PROJECTNAME)</pre>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

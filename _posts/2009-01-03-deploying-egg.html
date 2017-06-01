@@ -1,0 +1,22 @@
+---
+layout: post
+title:  "Deploying Egg"
+date:   2009-01-03 12:47:00
+categories: 
+description: Just a quick ref....
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<p><span class="visualHighlight">export&#160;COPY_EXTENDED_ATTRIBUTES_DISABLE=true (for mac)</span></p>
+<pre>python setup.py egg_info -RDb <strong><span class="code-string">""</span></strong> sdist bdist_egg register upload</pre>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

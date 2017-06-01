@@ -1,0 +1,30 @@
+---
+layout: post
+title:  "Site Update"
+date:   2009-12-10 06:10:00
+categories: 
+description: I just updated my server with a new and improved buildout. I am now using repoze.zope2, Deliverance and Zine in the setup to make it wsgi'd. In this post I provide an overview of the setup.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<h2>previous<br></h2>
+<p>On this server, I run my web site and a few free sites that I do for friends and family. Previously, I was just running a zope instance for <a class="external-link" href="http://www.plone.org/">Plone</a> and a couple separate Paste served apps. It is also running Ubuntu and <a class="external-link" href="http://nginx.net/">nginx</a> on a <a class="external-link" href="http://www.linode.com/index.cfm">Linode</a> shared host.</p>
+<h2>updates</h2>
+<p>While working with a client on Deliverance and <a class="external-link" href="http://repoze.org/">repoze.zope2</a>, I realized it was about time to eat my own dog food and implement the new technologies on my own server. Since I've done a lot of the implementation and research for my client already, it was pretty easy to move over to the new setup. The setup was closely borrowed from <a class="external-link" href="http://www.martinaspeli.net/">Martin Aspeli</a>'s <a class="external-link" href="http://svn.plone.org/svn/collective/buildout/uber/plone3.x-repoze/">uber bulidout</a> in the <a class="external-link" href="http://svn.plone.org/svn/collective/">plone collective svn</a>. Here are some quick notes on updates of the setup:</p>
+<ul><li><a class="external-link" href="http://repoze.org/">repoze.zope2</a></li><li><a class="external-link" href="http://www.coactivate.org/projects/deliverance/project-home">Deliverance</a></li><li><a class="external-link" href="http://wsgi.org/wsgi/">wsgi</a></li><li><a class="external-link" href="http://nginx.net/">nginx</a></li><li>new site design themed with Deliverance<br></li><li>everything built using <a class="external-link" href="http://www.buildout.org/">buildout</a> include <a class="external-link" href="http://codespeak.net/lxml/">lxml</a> and nginx</li><li>move to zeo cluster with only one back end. This allows me to attach debug instances to the zeo server and turn one client on while the other is restarting.</li><li><a class="external-link" href="http://zine.pocoo.org/">Zine</a> blogging software built in</li><li><a class="external-link" href="http://supervisord.org/">supervisor</a> managed - <a class="external-link" href="http://supervisord.org/">supervisor</a> allows you to monitor processes and http servers. It includes starting and stopping processes, tools to monitor the memory and availability and a web server to monitor them.<br></li></ul>
+<h2>highlights</h2>
+<ul><li><a class="external-link" href="http://pypi.python.org/pypi/collective.recipe.template">collective.recipe.template</a> is a great buildout recipe for various tasks to generate configuration files for nginx served sites configuration and Paste serve ini files</li><li><a class="external-link" href="http://pypi.python.org/pypi/collective.recipe.backup">collective.recipe.backup</a> provides easy to use backup and restore scripts for ZODB storage</li><li><a class="external-link" href="http://pypi.python.org/pypi/collective.recipe.filestorage">collective.recipe.filestorage</a> easily adds new mount point configuration to the plone.recipe.zope2zeoserver and plone.recipe.zope2instance recipes</li><li><a class="external-link" href="http://pypi.python.org/pypi/collective.recipe.supervisor">collective.recipe.supervisor</a> add <a class="external-link" href="http://supervisord.org/">supervisor</a> to the setup in a configurable way</li><li><a class="external-link" href="http://pypi.python.org/pypi/z3c.recipe.staticlxml">z3c.recipe.staticlxml</a> allows you to compile <a class="external-link" href="http://codespeak.net/lxml/">lxml</a> statically</li><li><a class="external-link" href="http://pypi.python.org/pypi/hexagonit.recipe.cmmi">hexagonit.recipe.cmmi</a> provides mechanisms to easily build non-python software</li><li><a class="external-link" href="http://repoze.org/">repoze.zope2</a> allows me to serve <a class="external-link" href="http://www.plone.org/">Plone</a> via a <a class="external-link" href="http://wsgi.org/wsgi/">wsgi</a> pipeline, which also allows me to add <a class="external-link" href="http://www.coactivate.org/projects/deliverance/project-home">Deliverance</a> to that pipeline<br></li><li><a class="external-link" href="http://pypi.python.org/pypi/zinebuildout">zinebuildout</a> integration so I can, with ease, provide multiple <a class="external-link" href="http://zine.pocoo.org/">zine</a> blogs<br></li></ul>
+<h2>&#160;conclusion</h2>
+<p>Overall, it was a great update. The only thing I'm concerned about is the size of my virtual host, which only has 512 MB of RAM right now. So far it seems to be holding up okay, but I'm not running <a class="external-link" href="http://varnish.projects.linpro.no/">Varnish</a> or load balancing(I don't get that many hits)....</p>
+<p>&#160;</p>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

@@ -1,0 +1,44 @@
+---
+layout: post
+title:  "Apache, Squid, Buildout"
+date:   2008-06-17 06:47:00
+categories: 
+description: Example buildout with apache and squid
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<h2>Prerequisites&#160;</h2>
+<ul><li>Apache2 installed(can install with buildout like squid is done here)<br></li><li>Plone instance with buildout</li></ul>
+<pre>[buildout]
+parts = apacheconfig
+
+[apacheconfig]
+recipe = plone.recipe.apache:config
+mainconfig = /path/to/included/apache/config
+bind = 80
+backends = 
+    domain.org:127.0.0.1:3128
+zope2_vhm_map = 
+    domain.org:/domain
+
+[squid-build]
+recipe = plone.recipe.squid:build
+url = http://www.squid-cache.org/Versions/v2/2.6/squid-2.6.STABLE18.tar.gz
+
+[squid-instance]
+recipe = plone.recipe.squid:instance
+bind = 127.0.0.1:3128
+backends = 127.0.0.1:8080
+cache-size = 256
+</pre>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

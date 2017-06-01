@@ -1,0 +1,159 @@
+---
+layout: post
+title:  "Plone 5 Upgrade Without UUID Links"
+date:   2016-01-14 21:47:00
+categories: 
+description: Convert a site not using UUID links to make it use UUID.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <p>If you're upgrading a Plone site to 5 and the site was not use UUID links, you'll notice a lot of your links are probably broken. The reason this happens is because Plone 5 no longer provides a &lt;base&gt; tag in the HTML output which non-uuid linked sites required to work properly.</p>
+<p>To fix, create a python file named <em>migrate-to-uuid.py</em> with the following contents:</p>
+<pre>from AccessControl.SecurityManagement import newSecurityManager
+from Acquisition import aq_parent
+from Products.Archetypes.Field import TextField
+from Products.CMFPlone.interfaces.siteroot import IPloneSiteRoot
+from lxml.html import fromstring
+from lxml.html import tostring
+from plone.app.textfield.value import RichTextValue
+from plone.dexterity.interfaces import IDexterityContent
+from plone.uuid.interfaces import IUUID
+import transaction
+
+
+def getUID(ob):
+    try:
+        return IUUID(ob)
+    except TypeError:
+        return ob.UID()
+
+
+def findObject(from_obj, path):
+    while not IPloneSiteRoot.providedBy(from_obj):
+        found = from_obj.restrictedTraverse(path, None)
+        if found:
+            return found
+        from_obj = aq_parent(from_obj)
+
+
+def transform_links_to_uuid(ob, html):
+    if not html:
+        return html
+    changes = False
+    try:
+        dom = fromstring(html)
+    except:
+        print('Error parsing DOM from content: %s' % '/'.join(ob.getPhysicalPath()))
+        return html
+    for el in dom.cssselect('a'):
+        href = el.attrib.get('href', '')
+        if (not href or href.startswith('http://') or
+                href.startswith('https://') or href.startswith('/') or
+                'resolveuid' in href):
+            continue
+        link_obj = findObject(ob, href)
+        if link_obj:
+            uuid = getUID(link_obj)
+            el.attrib.update({
+                'href': 'resolveuid/%s' % uuid,
+                'data-linktype': 'internal',
+                'data-val': uuid
+            })
+            changes = True
+
+    for el in dom.cssselect('img'):
+        src = el.attrib.get('src', '')
+        if (not src or src.startswith('http://') or
+                src.startswith('https://') or src.startswith('/') or
+                'resolveuid' in src):
+            continue
+
+        src, _, scale = src.partition('/@@images/image/')
+        if not scale:
+            src, _, scale = src.partition('/image_')
+        img_obj = findObject(ob, src)
+        if img_obj:
+            uuid = getUID(img_obj)
+            new_href = 'resolveuid/%s' % uuid
+            if scale:
+                new_href += '/@@images/image/' + scale
+
+            attribs = {
+                'src': new_href,
+                'data-linktype': 'image',
+                'data-val': uuid
+            }
+            if scale:
+                attribs['data-scale'] = scale
+            el.attrib.update(attribs)
+            changes = True
+
+    if changes:
+        return tostring(dom)
+    else:
+        return html
+
+
+def migrate_dexterity_to_uuid_links(ob):
+    try:
+        orig = ob.text.raw
+        new = transform_links_to_uuid(ob, orig)
+        if new != orig:
+            ob.text = RichTextValue(
+                new, mimeType=ob.text.mimeType, outputMimeType=ob.text.outputMimeType)
+            print('Fixed content not using UUID links: %s' % '/'.join(ob.getPhysicalPath()))
+            return 1
+    except AttributeError:
+        pass
+    return 0
+
+
+def migrate_archetypes_to_uuid_links(ob):
+    for field in ob.Schema().fields():
+        if type(field) == TextField and field.getContentType(ob) == 'text/html':
+            orig = field.getRaw(ob)
+            new = transform_links_to_uuid(ob, orig)
+            if orig != new:
+                field.set(ob, new)
+                print('Fixed content not using UUID links: %s' % '/'.join(ob.getPhysicalPath()))
+                return 1
+
+    return 0
+
+
+def migrate_to_uuid_links(site):
+    catalog = site.portal_catalog
+    count = 0
+    for brain in catalog():
+        ob = brain.getObject()
+        if IDexterityContent.providedBy(ob):
+            count += migrate_dexterity_to_uuid_links(ob)
+        else:
+            count += migrate_archetypes_to_uuid_links(ob)
+        if count % 100 == 0:
+            transaction.commit()
+            print('finished processing %i' % count)
+
+
+user = app.acl_users.getUser('admin')  # noqa
+newSecurityManager(None, user.__of__(app.acl_users))  # noqa
+
+for oid in app.objectIds():  # noqa
+    _obj = app[oid]  # noqa
+    if IPloneSiteRoot.providedBy(_obj):
+        migrate_to_uuid_links(_obj)
+        transaction.commit()
+</pre>
+<p><span class="discreet">This script will run through every Plone site on your instance. If you want to target, just one Plone site, you'll need to modify the bottom of the script.</span></p>
+<p>Then, just run the script against your instance:</p>
+<pre><code>./bin/client1 run migrate-to-uuid.py</code></pre>
+<p>&#160;</p>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

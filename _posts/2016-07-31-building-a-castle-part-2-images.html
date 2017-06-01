@@ -1,0 +1,63 @@
+---
+layout: post
+title:  "Building a Castle: Part 2, Focal point images"
+date:   2016-07-31 21:08:00
+categories: plone javascript photo-management widgets ui
+description: Making adding, managing and using images easier for content editors.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <p>Dealing with image scales, sizing and dimensions is one of the more difficult and infuriating aspects of managing content.</p>
+<p>Content editors aren't always keen on knowing and uploading their images into the correct dimension. More over, designs often require multiple dimensions to show an image at.&#160;</p>
+<p>It seems more and more that designs require effective use of image sizes so widths and heights match up <strong>without skewing the image</strong>.</p>
+<h2>Options</h2>
+<ol>
+<li>Make user upload multiple copies of an image and require them to crop to the correct sizes. You can provide widgets and forms to make this less error prone but still annoying for user.</li>
+<li>Require the user to crop each scale that is used in your design for each image. <a href="https://github.com/collective/plone.app.imagecropping" target="_blank" data-linktype="external" data-urltype="/view" data-val="https://github.com/collective/plone.app.imagecropping">plone.app.imagecropping</a> does a nice job of this but it's quite a bit to ask of your content editors still.</li>
+<li><strong>Automatically crop images with css and provide a focal point around which your cropping css cropping with occur</strong>.</li>
+</ol>
+<p>Obviously, we choose option #3 here. This way is the easiest for content editors to manage.</p>
+<h2>How&#160;to use it</h2>
+<p>It's as simple as pointing and clicking on the area of the image you would like to focus on when you upload and edit the images on your site.</p>
+<p>Take a look at the demo:&#160;</p>
+          </div>
+          </div>
+          <div class="movable removable mosaic-tile mosaic-castle.cms.videotile-tile">
+          <div class="mosaic-tile-content">
+          <div class="castle-tile-wrapper"><div class="widget-panel">
+  <div class="video-container landscape">
+  
+
+    
+    <p class="video-inner">
+      </p><div class="video-inner-container ">
+        <video preload="none" class="pat-video" style="width:100%;height:100%;" width="100%" height="100%" poster="/assets/img/settingthefocalpoint_large.png" controls="all">
+          <source src="/assets/video/settingthefocalpoint.mov/" type="video/mp4"></source>
+          
+        </video>
+        
+      </div>
+    
+    
+    
+
+    
+    
+  
+  </div>
+</div>
+</div>
+          </div>
+          </div>
+          <div class="movable removable mosaic-tile mosaic-plone.app.standardtiles.rawhtml-tile">
+          <div class="mosaic-tile-content">
+          <h2>How it looks</h2><p>It can look however you want it to in your content depending on your design but with it, you can do things like this without your content editors needing to crop any images.</p><p><img class="image-inline" src="/assets/img/screen-shot-2016-08-03-at-6-34-18-am_large.png" alt="" data-linktype="image" data-scale="large" data-val="d6d8d51c6a9d4c248dfb06d7bc3cd279" data-mce-src="../../resolveuid/d6d8d51c6a9d4c248dfb06d7bc3cd279/@@images/image/large"></p><p>Notice how we can easily align all the heights and widths this way and show the important part of the image without requiring the content editor to crop a bunch of images.</p><h2>How it works</h2><p>It works by storing the focal point data you set on the image by clicking the area of the image that you want and then, on render, JavaScript takes over and applies the correct CSS onto the element so it positions itself correctly depending on the width and height defined in CSS.</p><p>The <code>&lt;img&gt;</code>&#160;tag needs to be wrapped in a div and the wrapper div needs to have a height defined for it in CSS in order for it to calculate the proper translation.</p><p>Here is some sample markup:</p><pre>&lt;div class="focuspoint" data-h="1365" data-w="2048" data-focus-x="-0.2596875" data-focus-y="-0.9946875"&gt;<br>  &lt;img src="http://foobar.com/my-image.jpg/@@images/image/large"&gt;<br>&lt;/div&gt;<br></pre><p>Then, the JavaScript will apply CSS on the element to move it to the correct focal point location. Example:</p><pre>&lt;img src="http://foobar.com/my-image.jpg/@@images/image/large"<br>     class="max-width: 100% !important; top: -63.1818%; left: 0px;"&gt;<br></pre><h2>Bonus: progressive image loading</h2><p>Since we moved some of the image sizing and processing into CSS and JavaScript, we can also do clever things with loading <strong>lower scale images by default</strong> and <strong>delay loading images that are not currently viewable on the page</strong>. This greatly improve overall bandwidth usage and mobile experience.</p>
+          </div>
+          </div>
+          </div>
+      </div>
+    </div>
+  

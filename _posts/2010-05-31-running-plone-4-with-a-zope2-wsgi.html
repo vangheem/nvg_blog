@@ -1,0 +1,74 @@
+---
+layout: post
+title:  "Running Plone 4 with a Zope2 WSGI"
+date:   2010-05-31 00:20:00
+categories: sprint Zope2 plone
+description: Guide to running Plone 4 with the Zope2 WSGI branch
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <h2>Update</h2>
+<p>Tres has managed to merge his WSGI branch into trunk and Hanno tells me the unofficial plan is to include this in a release for Zope 2.13, in time for Plone 4.1. This is not decided upon yet though.</p>
+<h2>Overview</h2>
+<p>I was planning on implementing WSGI for Zope2 during the Penn State Symposium Sprints, and I did a few things to help out; however, Tres Seaver did most of the work on his own before and during part of the Sprint :) The rest of the time I spent just testing it out and helping with the Theme Editor sprint.</p>
+<p>Now, it's really quite trivial to get it working now and makes all of the repoze.zope2 nonsense unneeded now. This article is just here for a reference if anyone else is interested in getting it going on their setup.</p>
+<h2>Guide</h2>
+<p>This guide assumes you have an existing Plone 4 installation to work from. I don't provide any buildouts here--just modifying an existing buildout to make it work with a branch of Zope2 and creating an ini that Paste can consume to serve WSGI.</p>
+<h3>Supplying the WSGI'd Zope2</h3>
+<p>First off, go to the src directory of the installation. If you've installed using the unified installer, that will bin in <em>instance-home/zinstance/src </em>or if you just used straight buildout, it'll be in <em>instance/src.</em> Then checkout the Zope2 branch:</p>
+<pre>svn co http://svn.zope.org/repos/main/Zope/branches/tseaver-fix_wsgi/ Zope2</pre>
+<h3 class=" ">Stringing up buildout</h3>
+<p class=" ">Next thing you'll need to do is modify your <em>buildout.cfg</em> file to add the checked out Zope 2 to the develop section:</p>
+<pre class=" ">develop =&#160;<br>  ...<br>  Zope2<br>  ...</pre>
+<p class=" ">Still modifying your <em>buildout.cfg</em>, add Paste, PasteScript, repoze.tm2 and repoze.retry to your eggs section:</p>
+<pre class=" ">eggs =<br>  Plone<br>  Paste<br>  PasteScript<br>  repoze.tm2<br>  repoze.retry&#160;</pre>
+<p class=" ">Again, editing your <em>buildout.cfg, </em>add a <em>paster</em> part for the paster script:</p>
+<pre class=" ">parts =<br>  ...<br>  paster<br>  ...<br><br></pre>
+<div id="_mcePaste">[paster]</div>
+<div id="_mcePaste">recipe = repoze.recipe.egg</div>
+<div id="_mcePaste">scripts = paster</div>
+<div id="_mcePaste">eggs = ${instance:eggs}</div>
+<p class=" ">Then, you'll need to add the updated Zope2 versions for the WSGI branch. To do this, basically, just add the <em>versions.cfg</em> file provided in the branch after every other version file listed in the extends directive. It'll look like this:</p>
+<pre class=" ">extends =<br>  ...<br>  src/Zope2/versions.cfg</pre>
+<p class=" ">Then run your buildout like normal:</p>
+<pre class=" ">./bin/buildout</pre>
+<h3 class=" ">Creating a WSGI Configuration File</h3>
+<p>You'll now need to create a WSGI configuration file. Right now, we'll just server it using the Paste server and wsgi ini configuration way. You can also do this to string up Apache's WSGI implementation but that is beyond the scope of this article.</p>
+<p>Create a file in the instance directory called, <em>zope2.ini</em> with the contents of:</p>
+<pre>[app:zope]
+use = egg:Zope2#main
+zope_conf = %(here)s/parts/instance/etc/zope.conf
+
+[pipeline:main]
+pipeline =
+    egg:paste#evalerror
+    egg:repoze.retry#retry
+    egg:repoze.tm2#tm
+    zope
+
+[server:main]
+use = egg:paste#http
+host = localhost
+port = 8080
+</pre>
+<p class=" ">The <em>zope_conf</em> value in the <em>app:zope</em> section can be the path to any <em>zope.conf</em> file. I'm just exampling the standard location of it and not going through the configuration of that file itself.</p>
+<h3 class=" ">Fire it up!</h3>
+<p class=" ">If all went well, you should now be able to start up your Plone 4 instance on WSGI like this:</p>
+<pre class=" ">./bin/paster serve zope2.ini</pre>
+<p class=" ">Your server should now be able to visit your site on http://localhost:8080</p>
+<h2 class=" ">Caveats</h2>
+<p>I did run into a snag with the Mac OS X unified installer and the version of python it has configured. Basically, it wouldn't compile the Zope2 dependencies so I had to use my own version of python that I had compiled with the <a class="external-link" href="http://svn.plone.org/svn/collective/buildout/python/">python buildout</a> found in the plone collective svn. The bug is sort of referenced in the <a class="external-link" href="https://bugs.launchpad.net/zodb/+bug/427323">zope bug tracker</a>.</p>
+<h2 class=" ">Future Considerations</h2>
+<p>I'm hoping to maybe get a release with this branch implementation out--maybe as an alpha or beta release since I don't think they are planning on merging this to core any time soon; although, I really have no understanding of what that whole process is.</p>
+<p>I'd like to see the Zope2 package implement mkzope2instance and other convenience methods so it'd be possible to install Plone 4/Zope2 without buildout at all maybe using pip. I'm looking into how this might be able to happen with a pip versions file and other things. Maybe more on this later.</p>
+<p>&#160;</p>
+<p>Post any comments if you run into any issues.</p>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

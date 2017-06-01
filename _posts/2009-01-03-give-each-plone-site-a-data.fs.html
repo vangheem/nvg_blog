@@ -1,0 +1,30 @@
+---
+layout: post
+title:  "Give Each Plone Site A Data.fs"
+date:   2009-01-03 11:50:00
+categories: 
+description: Separate each Plone instance into having its own Data.fs to make backups easier.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<ul><li>First check out <a class="external-link" href="http://plone.org/documentation/how-to/multiple-plone-sites-per-zope-instance-using-separate-data-fs-files-for-each-one">this article</a> on plone.org<br></li><li>Under the instance part do something like this<br>
+<pre>&#160;zope-conf-additional = 
+  &lt;zodb_db site&gt;
+    # FileStorage for site
+    &lt;filestorage&gt;
+      path /opt/Plone-3.1/zinstance/var/filestorage/Data_site.fs
+    &lt;/filestorage&gt;
+    mount-point /site
+  &lt;/zodb_db&gt;</pre>
+</li><li>Now you will need to add a "ZODB Mount Point" <br></li><li>Select the new mount point and enable it</li><li>Now all you need to do is create the Plone site in there or copy an existing one into it.</li><li>You should be good to go now...<br></li></ul>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

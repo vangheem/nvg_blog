@@ -1,0 +1,38 @@
+---
+layout: post
+title:  "Using the zope debug console"
+date:   2009-01-31 20:05:00
+categories: Zope2 plone
+description: A short howto on using the zope debug console.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <p>First off, go into your instance directory and issue a command like this,</p>
+<pre>./bin/instance debug
+</pre>
+<h2>Things to Note</h2>
+<ul>
+<li>"app" is the zope root</li>
+<li>You can access your Plone instances and other objects just by issuing the normal ways for traversing objects.&#160; For instance,<br>
+<pre>app.Plone
+app['Plone']</pre>
+</li>
+</ul>
+<h2>Login as user</h2>
+<pre>from AccessControl.SecurityManagement import newSecurityManager
+user = app.acl_users.getUser(user_name_or_id)
+newSecurityManager(None, user.__of__(app.acl_users))</pre>
+<h2>Editing Objects</h2>
+<p>So what do you do if you want to edit objects and make the changes persist?&#160; Pretty much just treat objects like you'd normal do in a python script.&#160; Just when you're done, make sure you issue the following commands.</p>
+<pre>import transaction
+transaction.commit()
+app._p_jar.sync()</pre>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

@@ -1,0 +1,26 @@
+---
+layout: post
+title:  "Generate Signed URL for Amazon S3 Storage in Python"
+date:   2016-06-23 04:55:00
+categories: aws python
+description: Generate Signed URL for Amazon S3 Storage in Python
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <pre class="python">from boto.s3.connection import S3Connection
+s3_key_id = '&lt;id&gt;'
+s3_key_secret = '&lt;secret&gt;'
+s3_conn = S3Connection(s3_key_id, s3_key_secret)
+bucket = s3_conn.get_bucket('my-bucket')
+key = bucket.get_key('filename.mp4')
+expires = 30 * 24 * 60 * 60
+url = key.generate_url(expires)</pre>
+          </div>
+          </div>
+          </div>
+      </div>
+    </div>
+  

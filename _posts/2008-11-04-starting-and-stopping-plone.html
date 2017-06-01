@@ -1,0 +1,81 @@
+---
+layout: post
+title:  "Plone boot and shutdown startup script"
+date:   2008-11-04 03:58:00
+categories: 
+description: example script of what is placed in your /etc/init.d directory.  Credits go to T. Kim Nguyen on this.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          
+<ul><li>create plone31 executable in /etc/init.d</li><li>run "<font face="'Andale Mono'">chkconfig --add plone31"</font></li><li><font face="'Andale Mono'">and "</font><font face="'Andale Mono'">mkdir /var/log/plone31"</font><br></li></ul>
+<pre>#!/bin/sh
+#
+# Authors: T. Kim Nguyen (nguyen@uwosh.edu) 
+#
+#
+# /etc/init.d/plone31
+#
+### BEGIN INIT INFO
+# Provides: plone31
+# Required-Start: $local_fs $remote_fs $network 
+# X-UnitedLinux-Should-Start: $named $time postgresql sendmail mysql ypclient dhcp radiusd namcd
+# Required-Stop: $local_fs $remote_fs $network
+# X-UnitedLinux-Should-Stop:
+# Default-Start: 3 5
+# Default-Stop: 0 1 2 6
+# Short-Description: Plone 3.1
+# Description: Start the Plone 3.1 daemon
+### END INIT INFO
+
+pname=plone31
+logdir=/var/log/plone31
+
+action="$1"
+
+#
+# main part 
+#
+case "$action" in
+    start*)
+    echo -n "Starting Plone 3.1 "
+    cmdline='/opt/Plone-3.1/zinstance/bin/instance start'
+    echo -n "($cmdline) "
+    eval $cmdline &gt;&gt; $logdir/rc$pname.out 2&gt;&amp;1 
+    ;;
+    stop)
+    echo -n "Shutting down Plone 3.1 "
+    cmdline='/opt/Plone-3.1/zinstance/bin/instance stop'
+    echo -n "($cmdline) "
+    eval $cmdline &gt;&gt; $logdir/rc$pname.out 2&gt;&amp;1 
+    ;;
+    status)
+    echo -n "Status of Plone 3.1 ..."
+    cmdline='tail -6 $logdir/rc$pname.out'
+    echo "($cmdline) "
+    eval $cmdline 
+    ;;
+    *)
+    cat &gt;&amp;2 &lt;&lt;-EOF 
+    Usage: $0 &lt;command&gt; 
+
+    where &lt;command&gt; is one of:
+       start              - start Plone 3.1
+       stop               - stop Plone 3.1
+       status             - status of Plone 3.1
+       help               - this screen
+    EOF
+    exit 1
+esac
+
+</pre>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

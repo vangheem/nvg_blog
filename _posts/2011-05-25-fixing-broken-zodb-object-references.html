@@ -1,0 +1,84 @@
+---
+layout: post
+title:  "Fixing Broken ZODB Object references"
+date:   2011-05-25 02:05:00
+categories: python Zope2 plone databases
+description: I'm not an expert on this by any means, but here are some notes on my latest episode.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <h2>Introduction</h2>
+<p>If you start seeing POSKeyErrors on certain object, it most likely means your database is in some form of inconsistency. The problem is very well described by Elizabeth Leddy on her blog <a class="external-link" href="http://plonechix.blogspot.com/2009/12/definitive-guide-to-poskeyerror.html">here</a>. Her blog didn't quite handle the case that I encountered, missing objects--no oid in ZODB.</p>
+<h2>Getting Started</h2>
+<p>Run fsrefs.py to test your database and have it tell you which objects are bad.</p>
+<pre>python /path/to/eggs/ZODB/scripts/fsrefs.py /path/to/zodb/Data.fs</pre>
+<p>Will yield results like:</p>
+<pre> oid 0x959755L BTrees.OOBTree.OOBucket
+last updated: 2011-04-15 13:31:28.380634, tid=0x38DA88B79173877L
+refers to invalid object:
+	oid 0x0135ca66 missing: ''
+
+oid 0x135CA59L Products.ATContentTypes.content.document.ATDocument
+last updated: 2011-04-11 22:21:16.544874, tid=0x38D941D46976A11L
+refers to invalid objects:
+	oid 0x0135ca65 missing: ''
+	oid 0x0135ca5c missing: ''
+
+oid 0x135CA6AL BTrees.OOBTree.OOBTree
+last updated: 2011-04-11 22:16:14.294142, tid=0x38D94183CFD03CCL
+refers to invalid object:
+	oid 0x0135ca6b missing: ''</pre>
+<h2>Testing Out The Bad Object</h2>
+<pre>from ZODB.utils import p64<br style="padding-left: 0px;">from persistent import Persistent<br>obj = app._p_jar[p64(0x959755L)]
+obj</pre>
+<p>Should give the error:</p>
+<pre>2011-05-24 09:23:31 ERROR ZODB.Connection Couldn't load state for 0x0135ca59
+Traceback (most recent call last):
+  File "/opt/Zope/buildout-cache/eggs/ZODB3-3.8.4wc1-py2.4-linux-x86_64.egg/ZODB/Connection.py", line 811, in setstate
+    self._setstate(obj)
+  File "/opt/Zope/buildout-cache/eggs/ZODB3-3.8.4wc1-py2.4-linux-x86_64.egg/ZODB/Connection.py", line 870, in _setstate
+    self._reader.setGhostState(obj, p)
+  File "/opt/Zope/buildout-cache/eggs/ZODB3-3.8.4wc1-py2.4-linux-x86_64.egg/ZODB/serialize.py", line 604, in setGhostState
+    state = self.getState(pickle)
+  File "/opt/Zope/buildout-cache/eggs/ZODB3-3.8.4wc1-py2.4-linux-x86_64.egg/ZODB/serialize.py", line 597, in getState
+    return unpickler.load()
+  File "/opt/Zope/buildout-cache/eggs/ZODB3-3.8.4wc1-py2.4-linux-x86_64.egg/ZODB/serialize.py", line 471, in _persistent_load
+    return self.load_oid(reference)
+  File "/opt/Zope/buildout-cache/eggs/ZODB3-3.8.4wc1-py2.4-linux-x86_64.egg/ZODB/serialize.py", line 537, in load_oid
+    return self._conn.get(oid)
+  File "/opt/Zope/buildout-cache/eggs/ZODB3-3.8.4wc1-py2.4-linux-x86_64.egg/ZODB/Connection.py", line 244, in get
+    p, serial = self._storage.load(oid, self._version)
+  File "/opt/Zope/buildout-cache/eggs/ZODB3-3.8.4wc1-py2.4-linux-x86_64.egg/ZEO/ClientStorage.py", line 712, in load
+    return self.loadEx(oid, version)[:2]
+  File "/opt/Zope/buildout-cache/eggs/ZODB3-3.8.4wc1-py2.4-linux-x86_64.egg/ZEO/ClientStorage.py", line 735, in loadEx
+    data, tid, ver = self._server.loadEx(oid, version)
+  File "/opt/Zope/buildout-cache/eggs/ZODB3-3.8.4wc1-py2.4-linux-x86_64.egg/ZEO/ServerStub.py", line 196, in loadEx
+    return self.rpc.call("loadEx", oid, version)
+  File "/opt/Zope/buildout-cache/eggs/ZODB3-3.8.4wc1-py2.4-linux-x86_64.egg/ZEO/zrpc/connection.py", line 699, in call
+    raise inst # error raised by server
+POSKeyError: 0x0135ca65
+</pre>
+<p>&#160;</p>
+<h2 style="padding-left: 0px;">Fixing It</h2>
+<p style="padding-left: 0px;">Basically, you're going to need to replace the offending object with a placeholder object and then deleted that object after there is no longer a missing object.</p>
+<pre>from ZODB.utils import p64
+from persistent import Persistent<br>
+replace_obj = Persistent()
+replace_obj._p_oid = p64(0x0135ca66)
+replace_obj._p_jar = app._p_jar
+app._p_jar._register(replace_obj)
+app._p_jar._added[p64(0x0135ca66)] = replace_obj
+import transaction
+transaction.commit()</pre>
+<p>&#160;</p>
+<pre style="padding-left: 1em;">obj = app._p_jar[p64(0x959755L)]<br>obj&#160;</pre>
+<p>Now you'll be able to delete the object. The object could be in a list(item), dict(item) or a content type which will all require different methods to delete it.</p>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

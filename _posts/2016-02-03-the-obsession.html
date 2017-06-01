@@ -1,0 +1,63 @@
+---
+layout: post
+title:  "The JavaScript Obsession"
+date:   2016-02-03 03:30:00
+categories: 
+description: Why the obsession of tools and frameworks in JavaScript software engineering is unavoidable and should be embraced
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <h2>What is going on right now?</h2>
+<p>In the latest python web development project I'm working on, I decided to use Angular 2 for the JavaScript part of it. This is a first time using Angular 2 for me. I'm using it partly because I have friends that have successfully used it on their own projects but mostly because I feel compelled to learn a technology that gets a lot of hype in a language I write in most days(or compiled to I guess).</p>
+<p>In getting started with Angular 2, you'll learn npm. NPM allows you to build an environment of dependent packages. You define a json configuration file, run <code>npm install </code>and download a bunch of packages you define. In addition to that, npm can be used to define and scripts. Before NPM was very good, people tried using bower for downloading packages. You can potentially even use npm scripts instead of Grunt or Gulp. See what I did there? In explaining npm, I've gone through 3 other&#160;tools that JavaScript developers are familiar with.</p>
+<p>Let's keep going with the Angular 2 story. With npm, you've now installed Angular 2 libraries, shim libraries, <a href="https://github.com/systemjs/systemjs" data-linktype="external" data-val="https://github.com/systemjs/systemjs">SystemJS</a> and a few other libraries. SystemJS is a tool like requirejs, webpack, browsify, etc for loading JavaScript modules. Again, I'm assuming you know what webpack, browserify and requirejs all are because if you've done JavaScript development, you've either used them or read about them.</p>
+<p>Then there is TypeScript. Angular 2 doesn't work with plain JavaScript. TypeScript is like ES6 with type checking. In this realm, there are are tools like Babel, CoffeeScript and Traceur. Some of these you're really writing another language.</p>
+<h2>A common story</h2>
+<p>It's really not bad at all for Angular 2.&#160;This is happening everywhere. Any JavaScript heavy application will likely be a hodgepodge of some, more or other tools I've mentioned.</p>
+<p>In Plone, we use RequireJS, Grunt, npm and patternslib but we have JavaScript dependencies of underscore, backbone and various other JQuery libraries to give us the functionality we need. We tried hard to keep it as simple as possible but it's really impossible if you want to be serious about JavaScript development and keep in step somewhat with the JavaScript world. We'd be much worse off&#160;with no attempt to modularize the stack.</p>
+<p>Also, this is an incredibly small sample of all the popular libraries that there are currently communities around in the JavaScript world.</p>
+<h2>Why JavaScript</h2>
+<p>The extreme popularity of JavaScript is mostly driving this. The web is getting more interactive, HTML specs keep adding features, HTML/CSS/JavaScript is the most universal platform. It's the new PHP of things. Everyone can write it, everyone can deploy it and it's a language you can mostly get immediate feedback loops from.</p>
+<p>Moreover, there seems to be an arms race in the JavaScript world. All the sudden a lot of engineers are&#160;writing a lot of JavaScript and started building tools around the language. It used to be that mostly amateur developers used JavaScript to add a few interesting parts to a website. Now, the entire website is being rendered with JavaScript, things are more complicated and engineers are taking JavaScript more seriously. This means there are a lot of new ideas competing to be the popular solutions to problems.</p>
+<p>It seems to happen in many engineering disciplines. Between 3-6 years ago, there was a boom in Python Web Application Frameworks. Since then,&#160;things seem to have coalesced around a few major frameworks and&#160;there aren't many new web frameworks being introduced anymore.</p>
+<p>That being said, this has been going on in the JavaScript world for quite a long time now. You'd think by now things would have died down.&#160;</p>
+<h2>The&#160;churn</h2>
+<p>I do think things will&#160;settle down in the JavaScript world in the next couple years; however, the nature of software engineering is change. No matter how much people complain about the churn, there are always idea ideas being circulated.</p>
+<h2>Affects on newcomers</h2>
+<p>Consider what it is like for a new engineer engaging with these tools. If they&#160;don't have a guidebook to get through the swamp of tools, imagine how difficult it would be to pick with tools and libraries to utilize. Impossible. My head starts spinning trying to explain half of what is going on with many JavaScript projects. Here is where a strong case can be made for larger stack frameworks like Angular. Just point them at the docs and then learn the "Angular way."</p>
+<p>However, there are side-affects to that as well. It's annoying to have a large group&#160;of developers that identify as&#160;"Angular developers" instead of simply "JavaScript developers." This is probably going to be even more true with advent of TypeScript and Angular 2.&#160;</p>
+<p>Running an engineering group that work on a lot of different projects, I can't have my developers stuck on particular ways of doing things either. There is legacy jQuery way of doing things we maintain, we have a lot of ReactJS, backbone, etc.</p>
+<h2>Affects on senior web&#160;developers</h2>
+<p><span class="discreet">I'm referring mostly to general&#160;web developers&#160;here, not pure JavaScript developers.</span></p>
+<p>It's obvious to&#160;see the affect this is having on long-time web developers. These are developers whose JavaScript integration/usage level is usually involves including jQuery, adding a script and maybe throwing in some $(document).ready code. It's not good and many of these engineers are not very interested in learning the new technologies or haven't gotten around to it yet.</p>
+<p>Think of the ways these engineers need to change their thinking:</p>
+<ul>
+<li>no longer sequentially load files, dependency management</li>
+<li>no longer edit html templating that runs server side, templating runs client side</li>
+<li>new JavaScript idioms, syntax</li>
+<li>new ways compiling JavaScript</li>
+<li>dependency libraries</li>
+<li>build tools</li>
+</ul>
+<p>Many of these developers are un-interested in learning what is going on in the JavaScript world. They have been getting things done for a long time and why slow them down with this nonsense that in a moving target anyways I imagine they are thinking(I think it sometimes as well).</p>
+<h2>Why everyone&#160;should embrace it</h2>
+<p>I've spent a lot of time identifying&#160;the current difficulties&#160;in the JavaScript world. Despite&#160;these problems, I want to discuss why new and senior web developers&#160;need to embrace modern JavaScript development.</p>
+<p><strong>1. The interactive web is here to stay</strong>:&#160;JavaScript is here to stay. It will eventually become the most popular programming language in the world. The JavaScript stacks are maturing and every year that are better ways to solve problems and do more things easily in JavaScript.</p>
+<p><strong>2. The churn is slowing</strong>: The major frameworks are establishing themselves. The package management story has settled some and I expect other areas start settling out more in the coming years.</p>
+<p><strong>3. It's really not that hard</strong>:&#160;While there are choices of frameworks out there, they can all be grouped into 4 technologies:</p>
+<ol>
+<li><strong>Packaging</strong>: Downloading JavaScript packages(NPM, bower)</li>
+<li><strong>Build Tools</strong>: Tools to compile JavaScript and other things(Grunt, gulp, npm)</li>
+<li><strong>Dependency Management/Module Loading</strong>: Load and user dependent JavaScript modules in your code(requirejs, systemjs, commonjs)</li>
+<li><strong>Components</strong>: Organize your code into smaller, testable, easy to read bits(Angular, React, Patternslib)</li>
+</ol>
+<p>Once you learn/understand a technology in one of these areas, it's often easy to take up learning an alternative tool that essentially does the same thing in a different way.&#160;</p>
+          </div>
+          </div>
+          </div>
+      </div>
+    </div>
+  

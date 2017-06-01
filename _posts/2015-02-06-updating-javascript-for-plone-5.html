@@ -1,0 +1,127 @@
+---
+layout: post
+title:  "Updating JavaScript for Plone 5"
+date:   2015-02-06 01:05:00
+categories: widgets javascript ui plone
+description: An example in Plone core.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <div class="section" id="introduction">
+<h3>Introduction</h3>
+<p>Plone 5 will introduce some new concepts, for some, with working with JavaScript in Plone. Plone 5 utilizes Asynchronous Module Definition (AMD) with <a class="reference external" href="http://requirejs.org/">requirejs</a>. We chose AMD over other module loading implementations(like commonjs) because AMD can be used in non-compiled form in the browser. This way, someone can click "development mode" in the resource registry control panel and work with the non-compiled JavaScript files directly.</p>
+<p>Getting back on point, much of Plone's JavaScript was or still is using JavaScript in a non-AMD form. Scripts that expect JavaScript dependency scripts and objects to be globally available and not loaded synchronously will have a difficult time figuring out what is going on when upgrading to Plone 5.</p>
+<p>There are two scenarios where this will happen that we'll tackle in this post. 1) You have JavaScript registered in portal_javascripts that are not AMD compatible. 2) You have JavaScript included in the head tag of your theme and/or specific page templates that are not AMD compatible.</p>
+</div>
+<div class="section" id="working-with-deprecated-portal-javascripts">
+<h3>1) Working with deprecated portal_javascripts</h3>
+<p>The deprecated resource registries(and portal_javascripts) has no concept of dependency management. It simply allowed you to specify an order in which JavaScript files should be included on your site. It also would combined and minify them for you in deployment mode.</p>
+<div class="section" id="registration-changes">
+<h4>Registration changes</h4>
+<p>Prior to Plone 5, JavaScript files were added to the registry by using a <a class="reference external" href="http://docs.plone.org/develop/addons/components/genericsetup.html">Generic Setup Profile</a> and including a jsregistry.xml file to it. This would add your JavaScript to the registry, with some options and potentially set ordering.</p>
+<p>In Plone 5.0, Plone will still recognize these jsregistry.xml files. Plone tries to provide a shim for those that are stubborn to migrate. How it does this is by adding all jsregistry.xml JavaScripts into a "plone-legacy" Resource Registry bundle. This bundle simply includes a global jQuery object and includes the resources in sequential order after it.</p>
+</div>
+<div class="section" id="old-style-jsregistry-xml">
+<h4>Old style jsregistry.xml</h4>
+<p>An old style Resource Registry would look like this:</p>
+<pre class="literal-block">
+&lt;?xml version="1.0"?&gt;
+&lt;object name="portal_javascripts"&gt;
+  &lt;javascript
+    id="++resource++foobar.js"
+    inline="False"
+  /&gt;
+&lt;/object&gt;
+</pre>
+<p>To migrate this to Plone 5, resource registrations are all done in the <a class="reference external" href="https://pypi.python.org/pypi/plone.app.registry">Configuration Registry</a>.</p>
+</div>
+<div class="section" id="new-style-with-registry-xml">
+<h4>New style with registry.xml</h4>
+<p>The new registration will look something like:</p>
+<pre class="literal-block">
+&lt;?xml version="1.0"?&gt;
+&lt;registry&gt;
+  &lt;records prefix="plone.resources/foobar"
+           interface='Products.CMFPlone.interfaces.IResourceRegistry'&gt;
+    &lt;value key="js"&gt;.++resource++foobar.js&lt;/value&gt;
+    &lt;value key="deps"&gt;jquery&lt;/value&gt;
+  &lt;/records&gt;
+&lt;/registry&gt;
+</pre>
+<p>Notice how I've now added the deps property of "jquery". This is not necessary--I'm just giving an example that this script needs a global jquery available.</p>
+<p>This alone will not get your JavaScript included however. In order to modernize our JavaScript stack, Plone needed to make some changes with how it included JavaScript. All we've done so far is define a resource. In order for a resource to be included, it needs to be part of a bundle. A bundle defines a set of resources that should be compiled together and distributed to the browser. So you either need to add your resource to an existing bundle or create your own bundle.</p>
+<p>In this post, we'll describe the process of creating your own bundle. Again, we use registry.xml for configuration:</p>
+<pre class="literal-block">
+&lt;records prefix="plone.bundles/foobar"
+         interface='Products.CMFPlone.interfaces.IBundleRegistry'&gt;
+  &lt;value key="resources"&gt;
+    &lt;element&gt;foobar&lt;/element&gt;
+  &lt;/value&gt;
+  &lt;value key="enabled"&gt;True&lt;/value&gt;
+  &lt;value key="jscompilation"&gt;++resource++foobar-compiled.min.js&lt;/value&gt;
+  &lt;value key="last_compilation"&gt;2015-02-06 00:00:00&lt;/value&gt;
+&lt;/records&gt;
+</pre>
+<p>One important aspect here is the "jscompilation" settings. This defines the compiled resource used in production mode.</p>
+</div>
+<div class="section" id="but-it-s-a-bit-more-work">
+<h4>But, it's a bit more work</h4>
+<p>Yes, we know. We tried very hard to figure out the easiest way to modernize Plone's JavaScript development stack. The old, sequential inclusion is not useful these days.</p>
+<p>That being said, adding resources, bundles and compiling them can all be done Through The Web(TTW) in the new Resource Registries configuration panel. That way you can turn on development mode, compile your resources and then copy that compiled version into your package for distribution and not need to know any newfangled nodejs technologies like grunt, gulp, bower, npm, etc.</p>
+</div>
+</div>
+<div class="section" id="updating-non-amd-scripts">
+<h3>Updating non-AMD scripts</h3>
+<p>If you are not including your JavaScript in the Resource Registries and just need it to work alongside Plone's JavaScript because you're manually including the JavaScript files in one way or another(page templates, themes), there are a number of techniques available to read on the web that describe how to make your scripts conditionally work with AMD.</p>
+<p>For the sake of this post, I will describe one technique used in Plone core to fix the JavaScript. The change we'll be investigating can be seen with <a class="reference external" href="https://github.com/plone/plone.app.registry/commit/ad904f2d55ea6e45bb983f1fcc12ead7a191f50a">in a commit to plone.app.registry</a>. plone.app.registry has a control panel that allows some ajax searching and modals for editing settings.</p>
+<p>To utilize the dependency management that AMD provides and have the javascript depend on jQuery, we can wrap the script in an AMD <cite>require</cite> function. This function allows you to define a set of dependencies and a function that takes as arguments, those dependencies you defined. After the dependencies are loaded, the function you defined is called.</p>
+<p>Example:</p>
+<pre class="literal-block">
+require([
+  'jquery',
+  'pat-registry'
+], function($, Registry) {
+  'use strict';
+  ...
+  // All my previous JavaScript file code here
+  ...
+});
+</pre>
+<p>Here, the two dependencies we have are jQuery and the pattern registry. I will not get into the pattern registry as it's off topic for this discussion--it is basically a registry of JavaScript components. The necessity for using it here is with ajax calls and binding new DOM elements dynamically added to the page.</p>
+<p>Additionally, above this <cite>require</cite> call, I provide some backward compatible code that you can inspect. It's not necessary in this case but I added it to show how someone could make their script work when requirejs was available and when it was not.</p>
+</div>
+<div class="section" id="caveats">
+<h3>Caveats</h3>
+<div class="section" id="compilation">
+<h4>Compilation</h4>
+<p>Prior to Plone 5, when a resource was changed or added to the javascript registry, the registry would automatically re-compile all your JavaScript files.</p>
+<p>In switching to AMD, the compile step is much more resource intensive. It takes so long, there is no way we could do this real-time. Additionally, it can not be done in Python.</p>
+<p>When changes are made to existing bundles, re-compilation will need to be done TTW in the Resource Registries control panel. There is a build button next to each bundle. For advanced users, compilation can be done using a tool like grunt in your development environment.</p>
+</div>
+<div class="section" id="conditional-resources">
+<h4>Conditional resources</h4>
+<p>In Plone 5, individual resources can not be conditionally added to every page. This is due to the way we build JavaScript with AMD. Only bundles can be conditionally included. So if you have a resource that needs to be conditionally included, it will likely need it's own bundle.</p>
+</div>
+</div>
+<div class="section" id="topics-for-another-time">
+<h3>Topics for another time</h3>
+<p>You may have noticed that some subjects were glossed over. This post is already long enough but here are some things to not forget about.</p>
+<div class="section" id="css-less-resources">
+<h4>CSS/LESS Resources</h4>
+<p>The new Resource Registries also supports registering and compiling CSS and LESS files. It is done much like how JavaScript resources are compiled.</p>
+</div>
+<div class="section" id="patterns-mockup">
+<h4>Patterns/Mockup</h4>
+<p>This is just a standard way Plone has gone to in order to componentize JavaScript with pieces of HTML and CSS. Do not get too absorbed in the lingo. It's just a way to package bits of JavaScript and run those bits of JavaScript with markup on a webpage.</p>
+</div>
+</div>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

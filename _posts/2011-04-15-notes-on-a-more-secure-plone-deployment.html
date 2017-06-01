@@ -1,0 +1,94 @@
+---
+layout: post
+title:  "Notes on a More Secure Plone Deployment"
+date:   2011-04-15 01:00:00
+categories: python replication security plone
+description: Some things to think about if you're planning on providing a more secure Plone site. While Plone is a very secure CMS with an incredible track record, there are still plenty of things you can do to protect sites that might be larger targets.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <h2>&#160;</h2>
+<h2>Read-only Public Site</h2>
+<p>Making your public site read-only will prevent even a compromised site from taking any damage--even if a malicious user does somehow gain access, they can't save any different data to the database.</p>
+<p>There are a few ways to do this:</p>
+<ul>
+<li><a class="external-link" href="http://www.zope.com/zopecom/products/zope_replication_services.html">Zope Replication Services</a>(ZRS) allow you replicate a read-write backend private server to a read-only public facing site</li>
+<li>You can also use <a class="external-link" href="http://pypi.python.org/pypi/RelStorage">RelStorage</a> for you zeoserver. Then use the replication facilities provided by some RDMSs to replicate to a read-only zeoserver on the public site.</li>
+<li>It is also possible to have read-only zeo clients connected to a read-write zeo server.</li>
+<li><a class="external-link" href="http://pypi.python.org/pypi/gocept.zeoraid">zeoraid</a> might even be an option(never tried it)</li>
+</ul>
+<p>One thing to note is that there are some cases where Plone will try to write on read unfortunately. To get around this, I create a before commit event handler in a policy product to abort every transaction when the server is read-only. It's kind of hackish but a necessary evil to prevent a user from getting a nasty ReadOnly database error thrown at them. It would look something like:</p>
+<div id="_mcePaste">from zope.component import adapter</div>
+<div id="_mcePaste">from ZPublisher.interfaces import IPubBeforeCommit</div>
+<div id="_mcePaste">import App.config</div>
+<div id="_mcePaste">import transaction</div>
+<div id="_mcePaste">configuration = App.config.getConfiguration()</div>
+<div id="_mcePaste">readonly = configuration.read_only_database</div>
+<div id="_mcePaste">&#160;</div>
+<div id="_mcePaste">@adapter(IPubBeforeCommit)</div>
+<div id="_mcePaste">def abortTransactionOnReadOnly(event):</div>
+<div id="_mcePaste">if readonly:</div>
+<div id="_mcePaste">transaction.abort()</div>
+<h2>Rewrite Login URLs</h2>
+<p>You can also rewrite login urls on the public site to restrict anyone from seeing a login form. Just do normal rewrites at your proxy server.</p>
+<p>Urls you'll want to rewrite are:</p>
+<ul>
+<li>/manage</li>
+<li>/login</li>
+<li>/logged_out</li>
+<li>/require_login</li>
+<li>/acl_users</li>
+</ul>
+<p>This will prevent anyone from seeing a login form and an unauthorized page.</p>
+<p>You also might want to disable basic auth on the proxy server.</p>
+<h2>Keep it Secret, Keep it Safe</h2>
+<p>It's best if no one knows where your backend, read-write server is located except your content curators. What's more important is that even if someone knows where your site is located, they can't access it without some form of authentication first(in addition to normal plone authentication). There are a few ways to accomplish this:</p>
+<p>&#160;</p>
+<ul style="padding-left: 0px; list-style-type: disc;">
+<li style="padding-left: 0px;">Factored Authentication: Require something like SecureID to protect access to the read-write server</li>
+<li style="padding-left: 0px;">Basic Auth: If you're cheap and not hyper sensitive about the security, you could just provide an additional basic auth layer of authentication to prevent any access to the read-write server--just give all content curators the same username:password and then they login again to the Plone site.</li>
+<li style="padding-left: 0px;">Make site only accessible via VPN</li>
+<li style="padding-left: 0px;">Only provide access to the site on a local network at the workplace</li>
+</ul>
+<h3>Anonymity</h3>
+<p>If your read-write server is accessible in anyway(even if behind a factored authentication) you should still try and protect the knowledge of its existence.</p>
+<ol>
+<li>Provide an overriding robots.txt to deny all search engines from indexing your read-write site url. This can be done with simple nginx and apache rules.</li>
+<li>Make sure your content editors do NOT link to your read-write server. As silly as this sounds, it WILL happen if you don't do anything to prevent it. &#160;You can customize Tiny MCE to filter urls. Basically, customize tiny_mce_init.js in portal_skins/custom adding somethings like:<br>
+<pre>var bad_urls = [
+    'https://www.readwrite.com', 
+    'http://www.readwrite.com',
+];
+var replace_link = 'http://www.readonly.com';
+
+function filter_links(url, node, on_save){
+    for(var i = 0; i &lt; bad_urls.length; i++){
+        var bad = bad_urls[i];
+        url = url.replace(bad, replace_link);
+    }
+    return url;
+}
+
+...
+
+        window.tinyMCE.init({
+
+...
+
+            urlconverter_callback : filter_links
+</pre>
+<p>This will prevent any from being able to link your read-write server.</p>
+</li>
+<li>I also have run scripts periodically that go through all the content of the site looking for bad links. This then checks on people potentially using kupu or putting links into fields that do not have WYSIWYG editors.</li>
+</ol>
+<h2>Monitor</h2>
+<p>This might be obvious, but you need to make you have some sort of monitoring in place to track rejected logins to your backend. This will depend on what you've used to secure your backend.</p>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

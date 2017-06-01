@@ -1,0 +1,71 @@
+---
+layout: post
+title:  "Resumable file uploads with wildcard.foldercontents"
+date:   2014-01-22 06:05:00
+categories: plone python
+description: How to enable resumable file uploads in wildcard.foldercontents.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <p>The <a class="reference external" href="http://tus.io/">tus protocol</a> that was introduced <a class="reference external" href="http://nathanvangheem.com/news/introduction-tus-python-package">in my previous post</a> is now implemented in the latest <a class="reference external" href="https://pypi.python.org/pypi/wildcard.foldercontents/2.0a6">wildcard.foldercontents</a>.</p>
+<p>In order to activate tus resumable uploads in the latest wildcard.foldercontents however, you need to do a few things.</p>
+<div class="section" id="first-off">
+<h3>First off</h3>
+<p>upgrade wildcard.foldercontents <a class="reference external" href="https://pypi.python.org/pypi/wildcard.foldercontents/2.0a6">to the latest</a></p>
+</div>
+<div class="section" id="add-the-tus-package">
+<h3>Add the tus package</h3>
+<p>In the eggs section of buildout.cfg file:</p>
+<pre class="literal-block">
+eggs =
+    ...
+    tus
+    ...
+</pre>
+</div>
+<div class="section" id="add-environment-variables-to-configure-tus">
+<h3>Add environment variables to configure tus</h3>
+<p>In buildout.cfg again, you'll need to find your zeo "client" or "instance" configuration. It'll be the buildout section with the recipe plone.recipe.zope2instance or has the line <cite>recipe = plone.recipe.zope2instance</cite>.</p>
+<p>You'll need to add environment variable. Something like this should do:</p>
+<pre class="literal-block">
+environment-vars =
+    TUS_ENABLED true
+    TUS_TMP_FILE_DIR ${buildout:directory}/var/tmp
+</pre>
+<p>To see what other configuration options are available, <a class="reference external" href="https://pypi.python.org/pypi/tus">read the docs</a>.</p>
+</div>
+<div class="section" id="create-the-directory">
+<h3>Create the directory</h3>
+<p>If you're following the example exactly and using <cite>${buildout:directory}/var/tmp</cite> as your temporary file directory, you'll need to create the folder:</p>
+<pre class="literal-block">
+mkdir var/tmp
+</pre>
+<p>If you run plone as a different users, you might have to chown own the directory. Just make sure the user the runs the Ploen process has write access to the temporary directory</p>
+</div>
+<div class="section" id="finally">
+<h3>Finally</h3>
+<p>Run buildout:</p>
+<pre class="literal-block">
+./bin/buildout
+</pre>
+<div class="section" id="warning">
+<h4>Warning</h4>
+<ul class="simple">
+<li>resumable file uploads only works on modern browsers</li>
+<li>all the zeo servers running this need to be on the same physical server, have a shared tmp file directory storage or use sticky sessions in order for this to work</li>
+<li>current implementation uploads files in 5MB chunks and resuming works across those 5MB chunk boundaries. For instance, if an upload is interrupted after 4MB of upload, that request never actually finished uploading to Plone and the file data is never saved.</li>
+<li>only makes drag drop upload and upload button ON folder contents a resumable and chunking upload. Does not make existing file widgets in plone resumable.</li>
+<li>it's still new, expect some issues and please report any problems.</li>
+</ul>
+</div>
+</div>
+
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

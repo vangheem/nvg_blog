@@ -1,0 +1,25 @@
+---
+layout: post
+title:  "Plone 3.3.5 on Mac OS X Lion"
+date:   2011-08-27 01:25:00
+categories: python MAC OS X plone
+description: Some tips for Plone 3 on Lion.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <h2>Getting Python 2.4</h2>
+<p>First off, make sure you have a version of python 2.4 installed on the system. If you use the one located in the svn collective, it has a few patches that make it work correctly with Lion.</p>
+<pre>svn co http://svn.plone.org/svn/collective/buildout/python/<br>cd python<br>python bootstrap.py<br>./bin/buildout&#160;</pre>
+<p>Then use that python with your buildout.</p>
+<h2>Beware of collective.xdv</h2>
+<p>I didn't have enough time to figure out why, but xdv was making my instance crash on startup with no explanation. I did get plone to startup by upgrading to the latest version of xdv and collective.xdv but it would still crash when rendering a page for me. For now, I've just disable xdv on Lion and at least for a working plone 3 dev machine.</p>
+<p>Small post but I just wanted to put it up in case someone else was experiencing the same problems.</p>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  

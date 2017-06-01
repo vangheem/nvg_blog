@@ -1,0 +1,46 @@
+---
+layout: post
+title:  "Running Plone 4b4 with Zope 2.13.0a1"
+date:   2010-06-25 15:35:00
+categories: Zope2 installation python buildout plone
+description: Just some guidelines on getting Plone 4b4 to work with the new Zope 2.13 release to save you some time.
+---
+<div data-panel="content" data-max-columns="4">
+      <div class="mosaic-grid-row row">
+        <div class="mosaic-grid-cell mosaic-width-full mosaic-position-leftmost col-md-12">
+          <div class="mosaic-tile movable removable                   mosaic-IRichText-text-tile">
+          <div class="mosaic-tile-content">
+          <h2>Update</h2>
+<p>This method is most likely no longer suitable for a plone WSGI setup. With stable releases of Zope 2.13 coming out and Plone 4.1 almost ready for alpha, it'd be best to start there and ignore this post.</p>
+<div style="padding-left: 0px;">
+<h2 style="padding-left: 0px;">Introductions</h2>
+<p style="padding-left: 0px;">I'm not going to go into detail of the wheres and hows everything is done. This post expects you to know a bit about plone, zope and buildout. Maybe I'll be more detailed later. Use this if you want to save yourself a lot of time in getting a working setup with Plone 4 and Zope 2.13. Zope 2.13 adds native WSGI support in Zope. I tested it a bit and seems to work well but results may vary and I'm sure there will be a more supported way to do this soon.</p>
+<h2 style="padding-left: 0px;">Extends</h2>
+<p style="padding-left: 0px;">Make sure your buildout extends the&#160;http://download.zope.org/Zope2/index/2.13.0a1/versions.cfg versions file.</p>
+<h2 style="padding-left: 0px;">Checkouts</h2>
+<p style="padding-left: 0px;">You'll need to checkout Products.CMFCore, Products.PluggableAuthService, Products.TinyMCE and plone.locking from svn. You can use these locations right now until there is a new release,</p>
+<p style="padding-left: 0px;">http://svn.zope.org/repos/main/Products.CMFCore/branches/2.2/ Products.CMFCore</p>
+<p style="padding-left: 0px;">http://svn.zope.org/repos/main/Products.PluggableAuthService/trunk Products.PluggableAuthService</p>
+<p style="padding-left: 0px;">http://svn.plone.org/svn/collective/Products.TinyMCE/trunk/ Products.TinyMCE</p>
+<p style="padding-left: 0px;">http://svn.plone.org/svn/plone/plone.locking/trunk/ plone.locking</p>
+<p style="padding-left: 0px;">You'll also need to add these packages to your develop buildout section.</p>
+<h2 style="padding-left: 0px;">Extra Versions Pins</h2>
+<p style="padding-left: 0px;">You'll need to pin these versions since Zope 2.13 doesn't pin version that plone's setup used to assume were pinned,</p>
+<p style="padding-left: 0px;">Add these extra version pins</p>
+<div id="_mcePaste" style="padding-left: 0px;">Products.CMFCore = Products.PluggableAuthService = Products.TinyMCE = plone.locking = five.formlib = 1.0.2 zope.formlib = 3.7.0 zope.app.apidoc = 3.6.2 zope.app.applicationcontrol = 3.5.0 zope.app.appsetup = 3.11 zope.app.authentication = 3.6.0 zope.app.basicskin = 3.4.1 zope.app.broken = 3.5.0 zope.app.cache = 3.6.0 zope.app.catalog = 3.8.0 zope.app.component = 3.8.3 zope.app.container = 3.8.0 zope.app.content = 3.4.0 zope.app.dav = 3.5.1 zope.app.debug = 3.4.1 zope.app.dependable = 3.4.0 zope.app.dtmlpage = 3.5.0 zope.app.error = 3.5.2 zope.app.exception = 3.5.0 zope.app.file = 3.5.0 zope.app.folder = 3.5.1 zope.app.form = 3.8.1 zope.app.generations = 3.5.0 zope.app.http = 3.6.0 zope.app.i18n = 3.6.1 zope.app.interface = 3.5.0 zope.app.intid = 3.7.0 zope.app.locales = 3.6.1 zope.app.localpermission = 3.7.2 zope.app.pagetemplate = 3.7.1 zope.app.principalannotation = 3.7.0 zope.app.publication = 3.8.1 zope.app.publisher = 3.8.4 zope.app.renderer = 3.5.1 zope.app.rotterdam = 3.5.0 zope.app.schema = 3.5.0 zope.app.security = 3.7.3 zope.app.securitypolicy = 3.5.1 zope.app.server = 3.4.2 zope.app.session = 3.6.1 zope.app.testing = 3.7.3 zope.app.traversing = 3.4.0 zope.app.undo = 3.5.0 zope.app.wsgi = 3.6.0 zope.app.zapi = 3.4.1 zope.app.zcmlfiles = 3.5.5 zope.app.zopeappgenerations = 3.5.0 zope.app.zptpage = 3.5.0 plone.app.form = 2.0b6 plone.app.contentrules = 2.0b4 plone.app.portlets = 2.0b11 plone.app.users = 1.0b9 plone.app.contentmenu = 2.0b3</div>
+<div style="padding-left: 0px;">&#160;</div>
+<h2 style="padding-left: 0px;">Extra Eggs</h2>
+<p style="padding-left: 0px;">You'll also need to add extra add dependencies to your buildout that the Plone 4b4 egg doesn't require and should.</p>
+<p style="padding-left: 0px;">&#160;&#160; &#160;zope.formlib</p>
+<p style="padding-left: 0px;">&#160;&#160; &#160;five.formlib</p>
+<p style="padding-left: 0px;">&#160;&#160; &#160;zope.app.schema</p>
+<p style="padding-left: 0px;">&#160;</p>
+<h2 style="padding-left: 0px;">WSGI</h2>
+<p style="padding-left: 0px;">You can take a look at my previous post for doing WSGI Zope2 for guidelines on how to setup the paste config and such.</p>
+</div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
