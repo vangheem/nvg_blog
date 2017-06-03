@@ -13,9 +13,9 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Nathan Van Gheem
+title: Vangheezy Code Made Easy
 email: vangheem@gmail.com
-description: > # The personal website of Nathan Van Gheem
+description: The personal website of Nathan Van Gheem
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://www.nathanvangheem.com" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: vangheezy
