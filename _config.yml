@@ -21,6 +21,7 @@ url: "https://www.nathanvangheem.com" # the base hostname & protocol for your si
 twitter_username: vangheezy
 github_username:  vangheem
 permalink: /posts/:year/:month/:day/:title.html
+future: true
 
 # Build settings
 markdown: kramdown
