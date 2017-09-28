@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Persistent RabbitMQ Connections and Python AsyncIO"
-date: 2017-06-03 07:16:00
+date: 2017-09-27 19:30:00
 categories: python open-source rabbitmq asyncio heartbeat
 description: Properly maintaining persistent RabbitMQ connections with Python AsyncIO
 published: true
