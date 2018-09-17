@@ -4,7 +4,7 @@ title: "Update Cloudflare DNS settings with Python"
 date: 2018-07-15 15:30:00
 categories: python cloudflare dns
 description: Automatically update cloudflare DNS settings with python when you have a dynamic IP
-published: false
+published: true
 ---
 
 # Introduction
