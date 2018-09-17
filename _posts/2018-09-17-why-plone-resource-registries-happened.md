@@ -11,10 +11,10 @@ It all started with the
 [2014 Zidandca Sprint](https://plone.org/news/old-news/zidanca-sprint-report-js-less-integration).
 
 We had [the mockup project](https://github.com/plone/mockup). We had [Plone](https://plone.org).
-Now, we needed a way to bring to make them work in "harmony" together.
+Now, we needed a way to make them work in "harmony" together.
 
-It was the first time I met [Ramon Navarro Bosch](https://twitter.com/bloodbare). Side note: who since then,
-I've done a lot of open source work with. I even joined one of his startups.
+It was the first time I met [Ramon Navarro Bosch](https://twitter.com/bloodbare). Side note: since then,
+I've done a lot of open source work with Ramon. I even joined one of his startups.
 
 
 ## The mockup project
@@ -36,7 +36,7 @@ Well, decoupling can be great; however, we still need to deliver a CMS. Within t
 understood that you needed to be able to customize and rebuild JavaScript and CSS files within the CMS(I think
 now people are not as interested in this feature).
 
-The original author of the mockup project was not interested in merging the world. In fact, if I remember correctly,
+The original author of the mockup project was not interested in merging the two worlds. In fact, if I remember correctly,
 I believe his intention was that if people wanted to customize the JavaScript components shipped with Plone,
 they should fork the project and make the customizations here.
 
@@ -51,9 +51,9 @@ To give you an idea at the state of JavaScript in 2014, here are the type of com
 
 What we were asked to solve:
  - integrate mockup within plone
- - add/remove js/css resource
- - customize resources
- - build js/css files
+ - add/remove js/css resources
+ - customize resources through the web
+ - build js/css files through the web
 
 Also keep in mind, we were asked to solve these problems mostly for people who still wanted to do
 TTW(through the web) development. Ramon and I did not do TTW development and JavaScript technology
@@ -70,15 +70,16 @@ Basically, what is does is:
 
 - allow registering "resources" and "bundles"
 - a resource is a JavaScript or CSS file
-- a bundle is a build which combines files and uses the RequireJS to resolve resource dependencies
+- a bundle is a build which combines files and uses RequireJS to resolve resource dependencies
 - also supports compiling LESS CSS
 - support building resources on the command line from configured customizations/registrations
 
 
 ## Retrospective
 
-Well, it didn't work out well. For the most part, either people didn't like it or didn't understand it.
-Ramon and I spent a insane amounts of time working out the issues, documenting and training people on it.
+Well, it didn't work out well. For the most part, the implementation isn't perfect and 
+either people didn't like it or didn't understand it. Ramon and I spent a insane amounts
+of time working out the issues, documenting and training people on it.
 
 "This is a amazing. You integrated JavaScript development with a CMS. No one has ever done that." said
 NO ONE EVER about the project.
@@ -90,5 +91,5 @@ Summary of the problems:
 - Buggy and difficult to understand when problems occurred
 - Difficult to change development paradigms when people are used to traditional frontend development
 
-One good thing about it is that it forced the community into learning and exploring different approaches
+One good thing about it is that it encouraged the community into learning and exploring different approaches
 to integrating frontend development with Plone.
