@@ -40,3 +40,24 @@ Finally, install pyrocksdb with pip:
 pip install Cython
 pip install python-rocksdb
 ```
+
+
+Here is a full Dockerfile for it::
+
+```
+FROM python:3.7.2
+
+RUN apt-get update
+RUN apt-get install build-essential libsnappy-dev zlib1g-dev libbz2-dev \
+    libgflags-dev liblz4-dev libzstd-dev git-core -y
+
+RUN git clone https://github.com/facebook/rocksdb.git --branch=v4.13.5 /usr/src/rocksdb
+RUN cd /usr/src/rocksdb && make shared_lib
+RUN cd /usr/src/rocksdb && make install-shared INSTALL_PATH=/usr
+
+WORKDIR /usr/src/app
+
+RUN pip install Cython
+RUN pip install python-rocksdb
+
+```
