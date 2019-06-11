@@ -21,7 +21,7 @@ I wrote a framework that lives in this category: [Guillotina](https://github.com
 
 Also, there are many great projects that are designed specifically for AsyncIO and seem to perform
 extremely well--just look at all the things the [magicstack](https://github.com/magicstack) people
-are doing.
+are doing with [EdgeDb](https://edgedb.com/).
 
 I had quite a few responses to the tweet and I'll try to expand on those things in this post.
 
