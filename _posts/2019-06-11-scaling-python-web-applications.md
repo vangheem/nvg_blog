@@ -1,9 +1,9 @@
 ---
 layout: post
 title:  "Scaling Python Web Applications: AsyncIO vs Threads"
-date: 2019-02-16 01:30:00
+date: 2019-03-11 01:30:00
 categories: python asyncio performance
-description: A comparison of how to scale python web applications in 
+description: A comparison of how well python web applications scale
 published: true
 ---
 
@@ -16,7 +16,7 @@ Recently, Mike Bayer tweeted:
 
 Needless to say, I strongly disagree.
 
-While, "database application" is a pretty broad category to designate not using AsyncIO,
+While, "database application" is a pretty broad category to designate not using AsyncIO for,
 I wrote a framework that lives in this category: [Guillotina](https://github.com/plone/guillotina).
 
 Also, there are many great projects that are designed specifically for AsyncIO and seem to perform
@@ -35,7 +35,7 @@ problem another way(queue, another services, etc).
 
 ## Threads can be CPU bound too
 
-The point I want to stress here is that being CPU is not an AsyncIO only problem. You
+The point I want to touch on here is that being CPU is not an AsyncIO only problem. You
 can be CPU bound with threaded web applications as well.
 
 Let's see how a thread-based application performs vs an AsyncIO applications for CPU bound
@@ -270,16 +270,27 @@ Finally, the flask app performed about the same as the CPU bound example.
 Unfortunately, now the flask app is blocking when the CPU isn't even doing anything.
 
 
-# How to deploy Python web applications
+# Summary
 
-- cpu monitoring
-- load balancers
-- connection pooling
+As with most technology, you just need to understand the tradeoffs you're making and the consequences of them.
+
+You definitely do not want to have CPU bound AsyncIO applications. Also, if the domain logic of your web application is rather CPU-intense(or could be some day), it probably
+will start performing badly.
+
+However, thread-based Python web applications can be CPU bound as well and suffer similar performance issues in these scenarios.
+
+In network-io bound scenarios, AsyncIO really shines. If you are communicating with many other services, you might want to look into using AsyncIO.
 
 
-Maybe one odd thing is that `gunicorn` defaults to running apps with `1` thread.
+# Tips on deploying and scaling Python web applications
 
-Typically, in python threaded applications, you limit the number of threads per process
-to 2 to maximize performance; however, maybe `gunicorn` has a default with a single
-thread because that is where you get the absolute best performance. If that is the case,
-it is even more telling about what it means to properly scale
+Python isn't fast. That is a tradeoff we all made when we started using it. It can be scaled though and there are a lot of very large sites that run python fine.
+
+This blog post is already too long but here are some parting tips to keep in mind when scaling web applications:
+
+- load balancers: Run your application with multiple processes and use a load balancer to share traffic between them.
+- cpu monitoring: Make sure your application isn't maxed out on CPU. Even better, if you're using kubernetes(or something similar), setup auto scalers when CPU hits thresholds.
+- connection pooling: Prevent simultaneous connections to python applications by using proxies/load balancers that will pool requests in front of your application to ensure your application is servicing a healthy number of requests at a time.
+- message queues: if you have CPU bound tasks, put them in a queue to be processed by another service. If you have a threaded application and have a lot of network-bound io, you might also want to use a message queue for that
+- micro-services; if you are using AsyncIO, you can leverage micro-services to off-load potentially CPU-bound operations.
+- caching: the topic is so broad and so many ways to do it...
