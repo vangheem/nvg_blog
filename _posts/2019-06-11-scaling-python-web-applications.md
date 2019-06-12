@@ -35,8 +35,8 @@ problem another way(queue, another services, etc).
 
 ## Threads can be CPU bound too
 
-The point I want to touch on here is that being CPU is not an AsyncIO only problem. You
-can be CPU bound with threaded web applications as well.
+The point I want to touch on here is that being CPU-bound is not an AsyncIO only problem. You
+can be CPU-bound with threaded web applications as well.
 
 Let's see how a thread-based application performs vs an AsyncIO applications for CPU bound
 request handling.

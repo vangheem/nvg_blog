@@ -4,7 +4,7 @@ title:  "Scaling Python Web Applications: AsyncIO vs Threads"
 date: 2019-03-11 02:30:00
 categories: python asyncio performance moved
 tags: [moved]
-description: A comparison of how well python web applications scale
+description: Moved
 published: true
 ---
 
