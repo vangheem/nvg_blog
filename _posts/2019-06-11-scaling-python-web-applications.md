@@ -41,7 +41,7 @@ can be CPU bound with threaded web applications as well.
 Let's see how a thread-based application performs vs an AsyncIO applications for CPU bound
 request handling.
 
-For the context of this post, we will be using this [loader script](https://gist.github.com/vangheem/00666c9cf264f883db119cca6c59016e)
+For the context of this post, we will be using this [loader script](https://gist.github.com/vangheem/00666c9cf264f883db119cca6c59016e). It defaults to running 100 requests concurrently.
 
 Our simple CPU bound threaded app will be a flask app that does a CPU heavy task for
 half a second on each request:
@@ -131,7 +131,7 @@ to service other requests.
 
 ### AsyncIO with thread executor
 
-The AsyncIO thread executor variant with results are a less easy to predictable but we can try. We are using the default thread pool executor which, from the docs, says:
+The AsyncIO thread executor variant with results are a less easy to predict but we can try. We are using the default thread pool executor which, from the docs, says:
 
 ```
 will default to the number of processors on the machine, multiplied by 5
@@ -145,7 +145,8 @@ For me, I have 4 cores on this machine:
 
 But wait! In the results, we only obtained around 20 requests/second here. I didn't
 investigate why we didn't get up to 40 requests/second but can only guess that it
-has something to do with python threading just not being very fast. Generally, if
+has something to do with python threading just not being very fast and limits to what
+4 cores can do in general along with other things running on my computer. Generally, if
 you want to maximize python performance, you want to limit the number of CPU-bound
 threads per process you are using. This is true for any python application.
 
@@ -183,7 +184,7 @@ Read up on [AsyncIO development](https://docs.python.org/3/library/asyncio-dev.h
 
 Now where AsyncIO really shines and threaded apps really struggle is with network bound operations.
 
-Most web applications, especially in micro-service frameworks, are network-IO bound. The main point of micro-service frameworks is small services that speak http. If you are blocking when interacting with other services over, your performance will dramatically suffer.
+Most web applications, especially in micro-service frameworks, are network-IO bound. The main point of micro-service frameworks is small services that speak http. If you are blocking when interacting with other services, your performance will dramatically suffer.
 
 
 ## Setup
