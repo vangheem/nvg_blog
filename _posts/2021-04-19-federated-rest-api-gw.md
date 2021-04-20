@@ -239,3 +239,9 @@ examples are a simple way it could work.
    with this(no http status codes); however, I can see issues where one
    service responds correctly but another does not. What happens if
    a "foreign" key does not return a value?
+
+# Update
+
+I've written a POC implementation of the above in Python and [put it on GitHub](https://github.com/vangheem/federated-openapi-poc).
+
+![Postman example](/assets/posts/openapi-gw/openapi-gw-postman.png)
