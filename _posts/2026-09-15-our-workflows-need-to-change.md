@@ -3,7 +3,7 @@ layout: post
 title: "Our workflows need to change"
 date: 2026-09-15 10:30:00
 categories: ai si
-description: We're all probably using Agents wrong and no one knows the right way to do things.
+description: We're all using Agents wrong.
 published: true
 ---
 
