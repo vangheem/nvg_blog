@@ -15,18 +15,19 @@
 # in the templates via {{ site.myvariable }}.
 title: Nathan Van Gheem's Blog
 email: vangheem@gmail.com
-description: Musings on Coding, Python, Open Source and Design
+description: Computer Science, AI/SI/Agents, Architecture and Design -- No LLMs were used here.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://www.nathanvangheem.com" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: vangheezy
 github_username:  vangheem
 permalink: /posts/:year/:month/:day/:title.html
+minima:
+  date_format: "%Y-%m-%d"
 future: true
 
 # Build settings
 markdown: kramdown
-theme: minima
-gems:
+plugins:
   - jekyll-feed
 exclude:
   - Gemfile
