@@ -9,3 +9,9 @@ published: false
 
 
 - future systems are just data + bespoke software
+- abstractions
+  - religion, math, gov are abstractions
+  - software is uber abstract
+  - software eats the world OR AI eats the world
+- tiktok, ai and post literate
+-
