@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Abstractions"
-date: 2026-08-14 10:30:00
+date: 2026-11-22 10:30:00
 categories: ai si llm culture society
 description: 
 published: true
