@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Our workflows need to change"
+title: "Our Changing Workplace"
 date: 2026-09-15 10:30:00
 categories: ai si
 description: We're all using Agents wrong.

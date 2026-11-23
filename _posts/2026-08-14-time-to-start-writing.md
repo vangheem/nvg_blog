@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Start writing again"
+title: "Writing"
 date: 2026-08-14 10:30:00
 categories: writing ai si llm
 description: Agents are dulling our thinking, reasoning and ability to organize ideas.
