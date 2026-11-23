@@ -3,7 +3,7 @@ layout: post
 title: "Abstractions"
 date: 2026-11-22 10:30:00
 categories: ai si llm culture society
-description: 
+description: Thinking through how agents will completely change the digital age.
 published: true
 ---
 
