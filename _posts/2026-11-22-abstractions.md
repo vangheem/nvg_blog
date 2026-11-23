@@ -18,6 +18,8 @@ Let's think about how communication has changed over the ages. We've gone throug
 - Mass literacy
 - Telegraph
 - Telephone
+- Radio
+- TV
 - Email
 - Text messages
 - Social media
@@ -78,9 +80,9 @@ It will be the ultimate or final digital abstraction.
 
 Sloppy? Yes. Leaky, Probably.
 
-Part of the problem with Agent is how easy it is to generic textual things with them makes it so that humans can keep up.
+Part of the problem with Agents is how easy they make it to generate text, which then feeds into too much text for humans to have to consume and review.
 
-Because of this, they end up doing way more than the users of the systems might intend and produce so many things that it ends up being wasteful to consume it. The marginal cost of producing so many things is near zero so it just keeps producing. But who is going to consume? If it's humans, it's quite frustrating to have to review a bunch of machine generated slop. If it's for another agent, why?
+Because of this, they end up doing way more than the users of the systems might intend and produce so much text that it ends up being wasteful and difficult to consume it as a human. The marginal cost of producing so much text is near zero so it an agent can just keep producing. But who is going to consume? If it's humans, it's quite frustrating to have to review a bunch of machine generated slop. If it's for another agent, why?
 
 Now, when Agents are used for communicating with other systems, it is actually an amazingly dynamic abstraction. Having to write interoperable systems used to be a big part of software engineering. The age of Agents has mostly solved that trouble for us.
 
